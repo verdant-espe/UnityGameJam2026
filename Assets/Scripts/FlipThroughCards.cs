@@ -1,28 +1,41 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.XR.Oculus.Input;
+using System.Collections;
 
 public class FlipThroughCards : MonoBehaviour
 {
     // List of five cards to flip through
     public List<GameObject> cards;
 
-    // How long it takes to flip through every card before stopping
-    private float flipTime;
+    // Card rigidbodies
+    private Rigidbody rb;
+
+    // How long it takes to flip through every card
+    private float rotationForce;
+
+    // How long it takes for the rotation to stop and select a card
+    private float stopForce;
+
+    // How long it takes for cards to start/stop rotation
+    private float t;
+
+    // Cards are currently in rotation
+    int inRotate;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Flips through cards for a total of 5 seconds
-        flipTime = 5;
+        // Assigns rb to rigidbody component
+        rb = GetComponent<Rigidbody>();
 
         StartCardFlip();
     }
 
+
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
     }
 
     // Upon touching a card platform, an animation plays that flips through the set of five cards before landing on one, giving the player a buff + debuff effect
@@ -32,5 +45,10 @@ public class FlipThroughCards : MonoBehaviour
         {
 
         }
+    }
+
+    void StopCardFlip()
+    {
+
     }
 }

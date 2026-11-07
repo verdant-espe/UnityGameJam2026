@@ -7,11 +7,8 @@ public class CardRoulette : MonoBehaviour
     // All of the cards in roulette roster
     public GameObject card;
 
-    // How long it takes to rotate through every card
-    private float moveSpeed = 1000;
-
-    // How long it takes for the rotation to stop
-    private float stopSpeed;
+    // Speed when moving
+    private float moveSpeed = 1000f;
 
     // Starting position of cards
     private Vector3 startPos;
@@ -38,10 +35,13 @@ public class CardRoulette : MonoBehaviour
         // Moves cards left
         transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
 
+        // Gradually reduces the speed
+        moveSpeed = 0.999f * moveSpeed;
+
         // Move card1 back to start once it reaches the repeating point
-        if(card.transform.position.x < startPos.x - repeatPos)
+        if (card.transform.position.x < startPos.x - repeatPos)
         {
-            card.transform.position = new Vector3(1802, 0, 0);
+            card.transform.position = new Vector3(1555, 455, 0);
         }
     }
 }

@@ -132,8 +132,9 @@ GameObject:
   - component: {fileID: 191676461}
   - component: {fileID: 191676463}
   - component: {fileID: 191676464}
+  - component: {fileID: 191676465}
   m_Layer: 5
-  m_Name: PlaceholderCard2
+  m_Name: Card2
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 439, y: -204.54001}
+  m_AnchoredPosition: {x: 324, y: -204.54001}
   m_SizeDelta: {x: 232.45, y: 361.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &191676461
@@ -230,6 +231,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &191676465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191676459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5608c229bc61d04384105bb9a8f386b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystem
+  card: {fileID: 191676459}
+  player: {fileID: 0}
+  enemy: {fileID: 0}
+  hasCard: 0
 --- !u!1 &242145423
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,8 +441,9 @@ GameObject:
   - component: {fileID: 989559693}
   - component: {fileID: 989559695}
   - component: {fileID: 989559696}
+  - component: {fileID: 989559697}
   m_Layer: 5
-  m_Name: PlaceholderCard4
+  m_Name: Card4
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,7 +465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1344, y: -204.54001}
+  m_AnchoredPosition: {x: 1101, y: -204.54001}
   m_SizeDelta: {x: 232.45, y: 361.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &989559693
@@ -522,6 +540,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &989559697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989559691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5608c229bc61d04384105bb9a8f386b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystem
+  card: {fileID: 989559691}
+  player: {fileID: 0}
+  enemy: {fileID: 0}
+  hasCard: 0
 --- !u!1 &1085348765
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,6 +794,7 @@ RectTransform:
   - {fileID: 2086305294}
   - {fileID: 989559692}
   - {fileID: 1360406184}
+  - {fileID: 1451641973}
   - {fileID: 1191646268}
   m_Father: {fileID: 242145427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -840,8 +875,9 @@ GameObject:
   - component: {fileID: 1360406185}
   - component: {fileID: 1360406187}
   - component: {fileID: 1360406188}
+  - component: {fileID: 1360406189}
   m_Layer: 5
-  m_Name: PlaceholderCard5
+  m_Name: Card5
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -863,7 +899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1790, y: -204.54001}
+  m_AnchoredPosition: {x: 1507, y: -204.54001}
   m_SizeDelta: {x: 232.45, y: 361.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1360406185
@@ -938,6 +974,150 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1360406189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360406183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5608c229bc61d04384105bb9a8f386b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystem
+  card: {fileID: 1360406183}
+  player: {fileID: 0}
+  enemy: {fileID: 0}
+  hasCard: 0
+--- !u!1 &1451641972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1451641973}
+  - component: {fileID: 1451641977}
+  - component: {fileID: 1451641976}
+  - component: {fileID: 1451641975}
+  - component: {fileID: 1451641974}
+  - component: {fileID: 1451641978}
+  m_Layer: 5
+  m_Name: Card6
+  m_TagString: Card
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1451641973
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451641972}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.876476, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1261945466}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1906, y: -204.54001}
+  m_SizeDelta: {x: 232.45, y: 361.4}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!65 &1451641974
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451641972}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1451641975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451641972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1146ea2838dfe314c8b90ccb17aa8eb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardRoulette
+  card: {fileID: 1451641972}
+--- !u!114 &1451641976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451641972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5590391, g: 0, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1451641977
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451641972}
+  m_CullTransparentMesh: 1
+--- !u!114 &1451641978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451641972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5608c229bc61d04384105bb9a8f386b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystem
+  card: {fileID: 1451641972}
+  player: {fileID: 0}
+  enemy: {fileID: 0}
+  hasCard: 0
 --- !u!1 &1798302975
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,8 +1131,9 @@ GameObject:
   - component: {fileID: 1798302977}
   - component: {fileID: 1798302979}
   - component: {fileID: 1798302980}
+  - component: {fileID: 1798302981}
   m_Layer: 5
-  m_Name: PlaceholderCard1
+  m_Name: Card1
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -974,7 +1155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -15, y: -204.54001}
+  m_AnchoredPosition: {x: -72, y: -204.54001}
   m_SizeDelta: {x: 232.45, y: 361.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1798302977
@@ -1049,6 +1230,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1798302981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1798302975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5608c229bc61d04384105bb9a8f386b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystem
+  card: {fileID: 1798302975}
+  player: {fileID: 0}
+  enemy: {fileID: 0}
+  hasCard: 0
 --- !u!1 &1995248388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,8 +1396,9 @@ GameObject:
   - component: {fileID: 2086305295}
   - component: {fileID: 2086305297}
   - component: {fileID: 2086305298}
+  - component: {fileID: 2086305299}
   m_Layer: 5
-  m_Name: PlaceholderCard3
+  m_Name: Card3
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1222,7 +1420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 874, y: -204.54001}
+  m_AnchoredPosition: {x: 713, y: -204.54001}
   m_SizeDelta: {x: 232.45, y: 361.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2086305295
@@ -1297,6 +1495,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2086305299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086305293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5608c229bc61d04384105bb9a8f386b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystem
+  card: {fileID: 2086305293}
+  player: {fileID: 0}
+  enemy: {fileID: 0}
+  hasCard: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1155,6 +1155,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 564871192630777597, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
+      propertyPath: m_Radius
+      value: 1.04
+      objectReference: {fileID: 0}
     - target: {fileID: 2912523030980449353, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1216,21 +1220,73 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Size.x
+      value: 6.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Size.y
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Size.z
+      value: 7.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Center.x
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Center.y
+      value: -0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329793181971928655, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Height
+      value: 6.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329793181971928655, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Radius
+      value: 4.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329793181971928655, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Center.y
+      value: 0.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329793181971928655, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_SkinWidth
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329793181971928655, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_SlopeLimit
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 5995092603552992742, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: m_Name
-      value: Enemy
+      value: DiceSpider
       objectReference: {fileID: 0}
     - target: {fileID: 6601207405720932629, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 979071592}
+    - target: {fileID: 6601207405720932629, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: lungeDuration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6917261976637067431, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -153.04
       objectReference: {fileID: 0}
     - target: {fileID: 6917261976637067431, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 127.9
+      value: 128.67
       objectReference: {fileID: 0}
     - target: {fileID: 6917261976637067431, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: m_LocalPosition.z

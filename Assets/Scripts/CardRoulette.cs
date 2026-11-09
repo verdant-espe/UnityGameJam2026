@@ -36,12 +36,21 @@ public class CardRoulette : MonoBehaviour
         transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
 
         // Gradually reduces the speed
-        moveSpeed = 0.999f * moveSpeed;
+        moveSpeed = 0.9995f * moveSpeed;
 
         // Move card1 back to start once it reaches the repeating point
         if (card.transform.position.x < startPos.x - repeatPos)
         {
-            card.transform.position = new Vector3(1555, 455, 0);
+            card.transform.position = new Vector3(1992, 450, 0);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // If a card enters the trigger of the pointer once roulette stops, that card is selected
+        if (other.gameObject.CompareTag("Pointer"))
+        {
+            
         }
     }
 }

@@ -23,6 +23,24 @@ public class EnemyChase : MonoBehaviour
     public int maxJumps = 2;
     private int jumpsRemaining;
 
+    [Header("Ground Lunge")]
+    public float lungeRange = 5f;
+    public float lungeSpeed = 12f;
+    public float lungeDuration = 0.35f;
+    public float lungeCooldown = 2f;
+    public float lungeVerticalTolerance = 1.5f;
+
+    [Header("Animation Startup")]
+    [Tooltip("Startup frames at the specified animation frame rate.")]
+    public int lungeStartupFrames = 9;
+
+    [Tooltip("Frame rate used to calculate startup timing.")]
+    public float animationFrameRate = 60f;
+
+    [Header("Sprite Flipping")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private bool facesRightByDefault = true;
+
     [Header("Knockback")]
     [SerializeField] private KnockbackReceiver knockbackReceiver;
 
@@ -33,6 +51,38 @@ public class EnemyChase : MonoBehaviour
     private Vector3 previousPlayerPosition;
     private float playerHorizontalVelocity;
 
+    private bool isLunging;
+    private bool isLungeStarting;
+    private bool isJumpStarting;
+
+    private float lungeTimer;
+    private float cooldownTimer;
+    private float startupTimer;
+    private float lungeDirection;
+
+    private float jumpStartupDuration;
+    private float lungeStartupDuration;
+
+    public bool IsLunging
+    {
+        get { return isLunging || isLungeStarting; }
+    }
+
+    public bool IsJumpStarting
+    {
+        get { return isJumpStarting; }
+    }
+
+    public bool IsGrounded
+    {
+        get { return controller != null && controller.isGrounded; }
+    }
+
+    public float HorizontalSpeed
+    {
+        get { return horizontalSpeed; }
+    }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -41,6 +91,11 @@ public class EnemyChase : MonoBehaviour
         if (knockbackReceiver == null)
         {
             knockbackReceiver = GetComponent<KnockbackReceiver>();
+        }
+
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         if (player == null)
@@ -58,6 +113,14 @@ public class EnemyChase : MonoBehaviour
         {
             previousPlayerPosition = player.position;
         }
+
+        float safeFrameRate = Mathf.Max(animationFrameRate, 1f);
+
+        lungeStartupDuration =
+            lungeStartupFrames / safeFrameRate;
+
+        jumpStartupDuration =
+            lungeStartupDuration * 0.5f;
     }
 
     void Update()
@@ -67,10 +130,12 @@ public class EnemyChase : MonoBehaviour
             return;
         }
 
+        float deltaTime = Time.deltaTime;
+
         // TRACK PLAYER MOVEMENT
         playerHorizontalVelocity =
             (player.position.x - previousPlayerPosition.x)
-            / Mathf.Max(Time.deltaTime, 0.001f);
+            / Mathf.Max(deltaTime, 0.001f);
 
         previousPlayerPosition = player.position;
 
@@ -79,6 +144,9 @@ public class EnemyChase : MonoBehaviour
 
         float distance =
             Mathf.Abs(player.position.x - transform.position.x);
+
+        float verticalDistance =
+            Mathf.Abs(player.position.y - transform.position.y);
 
         // RESET JUMPS WHEN GROUNDED
         if (controller.isGrounded)
@@ -95,59 +163,163 @@ public class EnemyChase : MonoBehaviour
             isStunned = knockbackReceiver.IsStunned;
         }
 
-        // SMART HORIZONTAL CHASING
-        float direction = 0f;
-
-        if (!isStunned &&
-            distance <= chaseRange &&
-            distance > stopDistance)
+        // COOLDOWN
+        if (cooldownTimer > 0f)
         {
-            direction = Mathf.Sign(
-                predictedX - transform.position.x
-            );
+            cooldownTimer -= deltaTime;
         }
 
-        float targetSpeed = direction * speed;
-
+        // INTERRUPT ATTACK STARTUP OR LUNGE
         if (isStunned)
         {
-            // Immediately stop chasing during knockback.
+            isLungeStarting = false;
+            isJumpStarting = false;
+            isLunging = false;
             horizontalSpeed = 0f;
         }
-        else
+
+        // PROCESS STARTUP TIMERS
+        if (!isStunned)
         {
-            horizontalSpeed = Mathf.MoveTowards(
-                horizontalSpeed,
-                targetSpeed,
-                acceleration * Time.deltaTime
-            );
+            if (isLungeStarting)
+            {
+                startupTimer -= deltaTime;
+
+                if (startupTimer <= 0f)
+                {
+                    isLungeStarting = false;
+                    isLunging = true;
+                    lungeTimer = lungeDuration;
+                }
+            }
+            else if (isJumpStarting)
+            {
+                startupTimer -= deltaTime;
+
+                if (startupTimer <= 0f)
+                {
+                    isJumpStarting = false;
+                    Jump();
+                }
+            }
         }
 
-        // FIRST JUMP
+        bool isLocked =
+            isLungeStarting ||
+            isJumpStarting ||
+            isLunging;
+
+        // BEGIN GROUND LUNGE
         if (!isStunned &&
+            !isLocked &&
             controller.isGrounded &&
+            cooldownTimer <= 0f &&
+            distance <= lungeRange &&
+            distance > stopDistance &&
             distance <= chaseRange &&
-            player.position.y >
-            transform.position.y + jumpTriggerHeight &&
-            jumpsRemaining > 0)
+            verticalDistance <= lungeVerticalTolerance)
         {
-            Jump();
+            isLungeStarting = true;
+            startupTimer = lungeStartupDuration;
+            cooldownTimer = lungeCooldown;
+
+            lungeDirection = Mathf.Sign(
+                predictedX - transform.position.x
+            );
+
+            if (lungeDirection == 0f)
+            {
+                lungeDirection = 1f;
+            }
+
+            horizontalSpeed = 0f;
         }
 
-        // SECOND JUMP WHEN FALLING
+        // BEGIN JUMP STARTUP
         else if (!isStunned &&
-                 !controller.isGrounded &&
-                 velocity.y < 0f &&
+                 !isLocked &&
                  distance <= chaseRange &&
                  player.position.y >
                  transform.position.y + jumpTriggerHeight &&
-                 jumpsRemaining > 0)
+                 jumpsRemaining > 0 &&
+                 (controller.isGrounded || velocity.y < 0f))
         {
-            Jump();
+            isJumpStarting = true;
+            startupTimer = jumpStartupDuration;
+            horizontalSpeed = 0f;
+        }
+
+        // MOVEMENT
+        if (isStunned ||
+            isLungeStarting ||
+            isJumpStarting)
+        {
+            horizontalSpeed = 0f;
+        }
+        else if (isLunging)
+        {
+            horizontalSpeed =
+                lungeDirection * lungeSpeed;
+
+            lungeTimer -= deltaTime;
+
+            if (lungeTimer <= 0f)
+            {
+                isLunging = false;
+                horizontalSpeed = 0f;
+            }
+        }
+        else
+        {
+            float direction = 0f;
+
+            if (distance <= chaseRange &&
+                distance > stopDistance)
+            {
+                direction = Mathf.Sign(
+                    predictedX - transform.position.x
+                );
+            }
+
+            float targetSpeed = direction * speed;
+
+            horizontalSpeed = Mathf.MoveTowards(
+                horizontalSpeed,
+                targetSpeed,
+                acceleration * deltaTime
+            );
+        }
+
+        // SPRITE FLIPPING
+        float facingDirection = horizontalSpeed;
+
+        if (isLungeStarting || isLunging)
+        {
+            facingDirection = lungeDirection;
+        }
+        else if (isJumpStarting)
+        {
+            facingDirection =
+                predictedX - transform.position.x;
+        }
+
+        if (spriteRenderer != null &&
+            Mathf.Abs(facingDirection) > 0.01f)
+        {
+            bool facingLeft = facingDirection < 0f;
+
+            if (facesRightByDefault)
+            {
+                spriteRenderer.flipX = facingLeft;
+            }
+            else
+            {
+                spriteRenderer.flipX = !facingLeft;
+            }
         }
 
         // GRAVITY
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += gravity * deltaTime;
 
         Vector3 movement = new Vector3(
             horizontalSpeed,
@@ -155,18 +327,19 @@ public class EnemyChase : MonoBehaviour
             0f
         );
 
-        // Apply knockback movement.
+        // KNOCKBACK
         if (knockbackReceiver != null)
         {
             Vector3 knockbackMovement =
                 knockbackReceiver.GetKnockbackMovement(
-                    Time.deltaTime
+                    deltaTime
                 );
 
-            movement += knockbackMovement / Time.deltaTime;
+            movement += knockbackMovement / deltaTime;
         }
 
-        controller.Move(movement * Time.deltaTime);
+        // ONE MOVE PER FRAME
+        controller.Move(movement * deltaTime);
     }
 
     void Jump()

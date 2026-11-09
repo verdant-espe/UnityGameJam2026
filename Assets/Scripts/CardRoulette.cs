@@ -44,4 +44,13 @@ public class CardRoulette : MonoBehaviour
             card.transform.position = new Vector3(1992, 450, 0);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // If a card enters the trigger of the pointer once roulette stops, that card is selected
+        if (other.gameObject.CompareTag("Pointer"))
+        {
+            
+        }
+    }
 }

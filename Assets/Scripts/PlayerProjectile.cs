@@ -7,7 +7,7 @@ public class PlayerProjectile : MonoBehaviour
     [Header("Projectile Settings")]
     [SerializeField] private float speed = 15f;
     [SerializeField] private float lifetime = 3f;
-    [SerializeField] private float knockbackStrength = 8f;
+    [SerializeField] public float knockbackStrength = 8f;
 
     private Vector3 direction;
     private Rigidbody rb;

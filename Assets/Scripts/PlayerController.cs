@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalKnockbackVelocity;
     private float hitStunTimer;
 
+    public float mouseSensitivity { get; internal set; }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();

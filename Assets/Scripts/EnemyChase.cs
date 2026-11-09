@@ -23,6 +23,9 @@ public class EnemyChase : MonoBehaviour
     public int maxJumps = 2;
     private int jumpsRemaining;
 
+    [Header("Knockback")]
+    [SerializeField] private KnockbackReceiver knockbackReceiver;
+
     private CharacterController controller;
     private Vector3 velocity;
     private float horizontalSpeed;
@@ -35,23 +38,34 @@ public class EnemyChase : MonoBehaviour
         controller = GetComponent<CharacterController>();
         jumpsRemaining = maxJumps;
 
+        if (knockbackReceiver == null)
+        {
+            knockbackReceiver = GetComponent<KnockbackReceiver>();
+        }
+
         if (player == null)
         {
             GameObject foundPlayer =
                 GameObject.FindGameObjectWithTag("Player");
 
             if (foundPlayer != null)
+            {
                 player = foundPlayer.transform;
+            }
         }
 
         if (player != null)
+        {
             previousPlayerPosition = player.position;
+        }
     }
 
     void Update()
     {
         if (player == null)
+        {
             return;
+        }
 
         // TRACK PLAYER MOVEMENT
         playerHorizontalVelocity =
@@ -60,7 +74,6 @@ public class EnemyChase : MonoBehaviour
 
         previousPlayerPosition = player.position;
 
-        // PREDICT WHERE PLAYER WILL BE
         float predictedX = player.position.x +
             playerHorizontalVelocity * predictionTime;
 
@@ -74,10 +87,19 @@ public class EnemyChase : MonoBehaviour
             jumpsRemaining = maxJumps;
         }
 
+        // CHECK KNOCKBACK STUN
+        bool isStunned = false;
+
+        if (knockbackReceiver != null)
+        {
+            isStunned = knockbackReceiver.IsStunned;
+        }
+
         // SMART HORIZONTAL CHASING
         float direction = 0f;
 
-        if (distance <= chaseRange &&
+        if (!isStunned &&
+            distance <= chaseRange &&
             distance > stopDistance)
         {
             direction = Mathf.Sign(
@@ -87,14 +109,23 @@ public class EnemyChase : MonoBehaviour
 
         float targetSpeed = direction * speed;
 
-        horizontalSpeed = Mathf.MoveTowards(
-            horizontalSpeed,
-            targetSpeed,
-            acceleration * Time.deltaTime
-        );
+        if (isStunned)
+        {
+            // Immediately stop chasing during knockback.
+            horizontalSpeed = 0f;
+        }
+        else
+        {
+            horizontalSpeed = Mathf.MoveTowards(
+                horizontalSpeed,
+                targetSpeed,
+                acceleration * Time.deltaTime
+            );
+        }
 
         // FIRST JUMP
-        if (controller.isGrounded &&
+        if (!isStunned &&
+            controller.isGrounded &&
             distance <= chaseRange &&
             player.position.y >
             transform.position.y + jumpTriggerHeight &&
@@ -104,8 +135,9 @@ public class EnemyChase : MonoBehaviour
         }
 
         // SECOND JUMP WHEN FALLING
-        else if (!controller.isGrounded &&
-                 velocity.y < 0 &&
+        else if (!isStunned &&
+                 !controller.isGrounded &&
+                 velocity.y < 0f &&
                  distance <= chaseRange &&
                  player.position.y >
                  transform.position.y + jumpTriggerHeight &&
@@ -117,12 +149,22 @@ public class EnemyChase : MonoBehaviour
         // GRAVITY
         velocity.y += gravity * Time.deltaTime;
 
-        // MOVE LEFT AND RIGHT ONLY
         Vector3 movement = new Vector3(
             horizontalSpeed,
             velocity.y,
             0f
         );
+
+        // Apply knockback movement.
+        if (knockbackReceiver != null)
+        {
+            Vector3 knockbackMovement =
+                knockbackReceiver.GetKnockbackMovement(
+                    Time.deltaTime
+                );
+
+            movement += knockbackMovement / Time.deltaTime;
+        }
 
         controller.Move(movement * Time.deltaTime);
     }

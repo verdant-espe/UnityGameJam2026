@@ -10,7 +10,7 @@ public class CardRoulette : MonoBehaviour
     public GameObject card;
 
     // Speed when moving
-    private float moveSpeed = 1000f;
+    public float moveSpeed = 1000f;
 
     // Starting position of cards
     private Vector3 startPos;
@@ -44,6 +44,11 @@ public class CardRoulette : MonoBehaviour
         if (card.transform.position.x < startPos.x - repeatPos)
         {
             card.transform.position = new Vector3(1992, 450, 0);
+        }
+
+        if (moveSpeed == 155.5867f)
+        {
+            moveSpeed = 0f;
         }
     }
 }

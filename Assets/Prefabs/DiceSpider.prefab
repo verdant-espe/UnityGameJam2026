@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 3507656900370367328}
   - component: {fileID: 1246865519438318137}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: DiceSpider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,14 +88,16 @@ MonoBehaviour:
   maxJumps: 3
   lungeRange: 15.16
   lungeSpeed: 12
-  lungeDuration: 0.35
+  lungeDuration: 1
   lungeCooldown: 2
-  lungeVerticalTolerance: 1.5
-  lungeStartupFrames: 9
+  lungeVerticalTolerance: 5
+  lungeJumpHeight: 2.25
+  lungeStartupFrames: 30
   animationFrameRate: 60
   spriteRenderer: {fileID: 6841934559899148737}
   facesRightByDefault: 1
   knockbackReceiver: {fileID: 1915878213089112614}
+  lockZAxis: 1
 --- !u!114 &1915878213089112614
 MonoBehaviour:
   m_ObjectHideFlags: 0

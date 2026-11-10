@@ -23,12 +23,26 @@ public class EnemyChase : MonoBehaviour
     public int maxJumps = 2;
     private int jumpsRemaining;
 
+
+    [Header("Ground Check")]
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundCheckDistance = 0.15f;
+    [SerializeField, Range(0.1f, 0.95f)]
+    private float groundCheckRadiusMultiplier = 0.8f;
+
+    private bool isGrounded;
+    private bool groundResetLocked;
+
+
     [Header("Ground Lunge")]
     public float lungeRange = 5f;
     public float lungeSpeed = 12f;
     public float lungeDuration = 0.35f;
     public float lungeCooldown = 2f;
     public float lungeVerticalTolerance = 1.5f;
+
+    [Tooltip("Maximum height of the lunge's shallow jump.")]
+    public float lungeJumpHeight = 1.25f;
 
     [Header("Animation Startup")]
     [Tooltip("Startup frames at the specified animation frame rate.")]
@@ -43,6 +57,11 @@ public class EnemyChase : MonoBehaviour
 
     [Header("Knockback")]
     [SerializeField] private KnockbackReceiver knockbackReceiver;
+
+    [Header("2D Movement Plane")]
+    [SerializeField] private bool lockZAxis = true;
+
+    private float lockedZPosition;
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -73,10 +92,12 @@ public class EnemyChase : MonoBehaviour
         get { return isJumpStarting; }
     }
 
+
     public bool IsGrounded
     {
-        get { return controller != null && controller.isGrounded; }
+        get { return isGrounded; }
     }
+
 
     public float HorizontalSpeed
     {
@@ -86,6 +107,10 @@ public class EnemyChase : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
+        // Remember the enemy's starting Z position.
+        lockedZPosition = transform.position.z;
+
         jumpsRemaining = maxJumps;
 
         if (knockbackReceiver == null)
@@ -132,6 +157,16 @@ public class EnemyChase : MonoBehaviour
 
         float deltaTime = Time.deltaTime;
 
+
+        // Release takeoff protection when the enemy begins descending.
+        if (groundResetLocked && velocity.y <= 0f)
+        {
+            groundResetLocked = false;
+        }
+
+        isGrounded = CheckGround();
+
+
         // TRACK PLAYER MOVEMENT
         playerHorizontalVelocity =
             (player.position.x - previousPlayerPosition.x)
@@ -149,7 +184,7 @@ public class EnemyChase : MonoBehaviour
             Mathf.Abs(player.position.y - transform.position.y);
 
         // RESET JUMPS WHEN GROUNDED
-        if (controller.isGrounded)
+        if (isGrounded)
         {
             velocity.y = -2f;
             jumpsRemaining = maxJumps;
@@ -190,6 +225,11 @@ public class EnemyChase : MonoBehaviour
                     isLungeStarting = false;
                     isLunging = true;
                     lungeTimer = lungeDuration;
+
+                    // Launch upward into a shallow arc.
+                    velocity.y = Mathf.Sqrt(
+                        lungeJumpHeight * -2f * gravity
+                    );
                 }
             }
             else if (isJumpStarting)
@@ -212,7 +252,7 @@ public class EnemyChase : MonoBehaviour
         // BEGIN GROUND LUNGE
         if (!isStunned &&
             !isLocked &&
-            controller.isGrounded &&
+            isGrounded &&
             cooldownTimer <= 0f &&
             distance <= lungeRange &&
             distance > stopDistance &&
@@ -223,6 +263,7 @@ public class EnemyChase : MonoBehaviour
             startupTimer = lungeStartupDuration;
             cooldownTimer = lungeCooldown;
 
+            // Lock direction at the start of the attack.
             lungeDirection = Mathf.Sign(
                 predictedX - transform.position.x
             );
@@ -242,7 +283,7 @@ public class EnemyChase : MonoBehaviour
                  player.position.y >
                  transform.position.y + jumpTriggerHeight &&
                  jumpsRemaining > 0 &&
-                 (controller.isGrounded || velocity.y < 0f))
+                 (isGrounded || velocity.y < 0f))
         {
             isJumpStarting = true;
             startupTimer = jumpStartupDuration;
@@ -338,8 +379,24 @@ public class EnemyChase : MonoBehaviour
             movement += knockbackMovement / deltaTime;
         }
 
-        // ONE MOVE PER FRAME
+        // Prevent knockback from moving the enemy along Z.
+        if (lockZAxis)
+        {
+            movement.z = 0f;
+        }
+
+        // Move the CharacterController normally.
         controller.Move(movement * deltaTime);
+
+        // Correct any Z displacement caused by collision sliding.
+        if (lockZAxis)
+        {
+            Vector3 correctedPosition = transform.position;
+
+            correctedPosition.z = lockedZPosition;
+
+            transform.position = correctedPosition;
+        }
     }
 
     void Jump()
@@ -349,5 +406,50 @@ public class EnemyChase : MonoBehaviour
         );
 
         jumpsRemaining--;
+
+        groundResetLocked = true;
+        isGrounded = false;
+
     }
+
+
+    private bool CheckGround()
+    {
+        if (groundResetLocked || velocity.y > 0f)
+        {
+            return false;
+        }
+
+        Vector3 center = transform.TransformPoint(
+            controller.center
+        );
+
+        float radius = controller.radius *
+            groundCheckRadiusMultiplier;
+
+        float feetY = center.y -
+            controller.height * 0.5f;
+
+        float startOffset = radius + 0.05f;
+
+        Vector3 origin = new Vector3(
+            center.x,
+            feetY + startOffset,
+            center.z
+        );
+
+        float castDistance =
+            groundCheckDistance + 0.05f;
+
+        return Physics.SphereCast(
+            origin,
+            radius,
+            Vector3.down,
+            out RaycastHit hit,
+            castDistance,
+            groundLayer,
+            QueryTriggerInteraction.Ignore
+        );
+    }
+
 }

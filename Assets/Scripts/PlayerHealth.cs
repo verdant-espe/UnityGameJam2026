@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
-    [SerializeField] private int maxHealth = 7;
+    [SerializeField] public int maxHealth = 7;
 
-    public int CurrentHealth { get; private set; }
+    public int CurrentHealth { get; set; }
     public int MaxHealth => maxHealth;
     public bool IsDead { get; private set; }
 

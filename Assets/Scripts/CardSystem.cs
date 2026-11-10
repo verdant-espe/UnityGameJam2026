@@ -18,6 +18,8 @@ public class CardSystem : MonoBehaviour
     // References player shooting
     public PlayerShooting shooting;
 
+    public PlayerHealth health;
+
     // References enemy
     public EnemyChase enemy;
 
@@ -27,7 +29,7 @@ public class CardSystem : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -52,14 +54,11 @@ public class CardSystem : MonoBehaviour
             enemy.speed = 6f;
         }
 
-
-        // We don't have the code for health or damage yet so I'm gonna wait on those to finish this up
-
-
         // If player gets Card2, projectile damage is doubled but damage received is doubled as well
         if (other.gameObject.name == "Card2")
         {
-            
+
+            health.TakeDamage(2);
         }
 
         // If player gets Card3, projectile fire rate is increased but speed is decreased
@@ -79,6 +78,11 @@ public class CardSystem : MonoBehaviour
         // If player gets Card5, health is regenerated but enemy moves faster
         if (other.gameObject.name == "Card5")
         {
+            if(health.CurrentHealth < health.MaxHealth)
+            {
+                health.CurrentHealth = 7;
+            }
+
             enemy.speed = 6f;
         }
 

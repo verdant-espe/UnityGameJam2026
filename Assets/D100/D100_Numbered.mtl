@@ -1,0 +1,6 @@
+newmtl D100_GoldOnNavy
+Kd 1.0 1.0 1.0
+Ka 0.1 0.1 0.1
+Ks 0.25 0.25 0.25
+Ns 40
+map_Kd D100_Numbered_Texture.png

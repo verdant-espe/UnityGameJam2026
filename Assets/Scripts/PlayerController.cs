@@ -64,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         float deltaTime = Time.deltaTime;
+        // Check grounding before moving this frame.
+        bool grounded = controller.isGrounded;
 
         // Only allow ground detection while not rising.
         // A launched jump locks resets until descent.
@@ -81,18 +83,16 @@ public class PlayerMovement : MonoBehaviour
                 velocity.y = -2f;
             }
 
+            // Landing restores both jumps.
             jumpsRemaining = maxJumps;
         }
 
-        // Horizontal input.
+        // Horizontal movement and sprinting.
         float x = Input.GetAxisRaw("Horizontal");
 
-        float currentSpeed = speed;
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            currentSpeed = sprintSpeed;
-        }
+        float currentSpeed = Input.GetKey(KeyCode.LeftShift)
+            ? sprintSpeed
+            : speed;
 
         // Hit stun.
         if (hitStunTimer > 0f)
@@ -104,11 +104,13 @@ public class PlayerMovement : MonoBehaviour
 
         // Jump input.
         if (!isHitStunned &&
+            !isJumpSquatting &&
             Input.GetButtonDown("Jump") &&
             jumpsRemaining > 0)
         {
             if (isGrounded && jumpSquatDuration > 0f)
             {
+                // Play the jump-squat animation first.
                 isJumpSquatting = true;
                 jumpSquatTimer = jumpSquatDuration;
 
@@ -117,13 +119,14 @@ public class PlayerMovement : MonoBehaviour
                     animationController.PlayJumpSquat();
                 }
             }
-            else if (!isJumpSquatting)
+            else
             {
+                // Airborne jumps happen immediately.
                 PerformJump();
             }
         }
 
-        // Jump squat countdown.
+        // Finish the jump squat before jumping.
         if (isJumpSquatting)
         {
             jumpSquatTimer -= deltaTime;
@@ -135,24 +138,29 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        // Gravity.
-        velocity.y += gravity * deltaTime;
+        // Apply gravity.
+        velocity.y += gravity * Time.deltaTime;
 
+        // Normal horizontal movement.
         float horizontalMovement = x * currentSpeed;
 
+        // Disable player input during hit stun.
         if (isHitStunned)
         {
             horizontalMovement = 0f;
         }
 
+        // Add knockback from enemy attacks.
         horizontalMovement += horizontalKnockbackVelocity;
 
+        // Gradually reduce knockback.
         horizontalKnockbackVelocity = Mathf.MoveTowards(
             horizontalKnockbackVelocity,
             0f,
             knockbackDecay * deltaTime
         );
 
+        // Combine movement and gravity.
         Vector3 movement = new Vector3(
             horizontalMovement,
             velocity.y,
@@ -257,6 +265,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void PerformJump()
     {
+        // Calculate jumping velocity.
         velocity.y = Mathf.Sqrt(
             jumpHeight * -2f * gravity
         );

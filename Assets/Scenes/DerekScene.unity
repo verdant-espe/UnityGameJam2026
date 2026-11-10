@@ -1049,7 +1049,7 @@ GameObject:
   - component: {fileID: 511971184}
   - component: {fileID: 511971183}
   - component: {fileID: 511971182}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BottomFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1400,6 +1400,10 @@ PrefabInstance:
       propertyPath: jumpSquatDuration
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 3130544431134060163, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3442921358465486457, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
       propertyPath: spriteRenderer
       value: 
@@ -1604,9 +1608,15 @@ MonoBehaviour:
   jumpHeight: 7
   gravity: -20
   maxJumps: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckDistance: 0.15
+  groundCheckRadiusMultiplier: 0.8
   animationController: {fileID: 0}
   jumpSquatDuration: 0.25
   knockbackDecay: 12
+  lockZAxis: 1
 --- !u!143 &772888760
 CharacterController:
   m_ObjectHideFlags: 0

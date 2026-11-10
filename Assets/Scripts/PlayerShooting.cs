@@ -8,7 +8,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform firePoint;
 
     [Header("Shooting Settings")]
-    [SerializeField] private float fireRate = 0.2f;
+    [SerializeField] public float fireRate = 0.2f;
 
     private float nextFireTime;
 

@@ -1,20 +1,34 @@
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class MainMenu : MonoBehaviour
+public class MainMenuManager : MonoBehaviour
 {
-    [Header("Game Scene")]
-    public string gameSceneName = "Game";
+    public GameObject mainMenuCanvas;
 
     public void PlayGame()
     {
-        SceneManager.LoadScene(gameSceneName);
+        mainMenuCanvas.SetActive(false);
+        Time.timeScale = 1f;
     }
+
 
     public void QuitGame()
     {
-        Debug.Log("Game is quitting!");
+        Debug.Log("Quit button pressed!");
         Application.Quit();
     }
+
+    public GameObject creditsPanel;
+
+    public void OpenCredits()
+    {
+        mainMenuCanvas.SetActive(false);
+        creditsPanel.SetActive(true);
+    }
+
+    public void CloseCredits()
+    {
+        creditsPanel.SetActive(false);
+        mainMenuCanvas.SetActive(true);
+    }
+
 }

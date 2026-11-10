@@ -1,11 +1,15 @@
 using UnityEngine;
 using TMPro;
-using System.Runtime.InteropServices.WindowsRuntime;
-
 public class LuckyNumberManager : MonoBehaviour
 {
     private int selectedLuckyNumber;
+    public bool HasLuckyNumber => selectedLuckyNumber >= 1 && selectedLuckyNumber <= 100;
+
+#if UNITY_EDITOR
+    [SerializeField] private bool forceLuckyMatchForTesting = false;
+#endif
     [SerializeField] private TMP_InputField luckyNumberInput;
+    [SerializeField] private GameObject luckyNumberPanel;
     private string lastValidInput = "";
     private bool hasRolledForSecondChance= false;
 
@@ -20,14 +24,22 @@ public class LuckyNumberManager : MonoBehaviour
         selectedLuckyNumber = number;
         Debug.Log("Selected Lucky Number: " + selectedLuckyNumber);
     }
+
     public void ConfirmLuckyNumber()
     {
-        if (int.TryParse(luckyNumberInput.text, out int number))
+        if (int.TryParse(luckyNumberInput.text, out int number)
+            && number >= 1 && number <= 100)
         {
             SetLuckyNumber(number);
+
+            if (luckyNumberPanel != null)
+            {
+                luckyNumberPanel.SetActive(false);
+            }
         }
     }
-        public void ValidateLuckyNumberInput(string typedText)
+
+    public void ValidateLuckyNumberInput(string typedText)
     {
         if (string.IsNullOrEmpty(typedText))
         {
@@ -50,11 +62,24 @@ public class LuckyNumberManager : MonoBehaviour
         {
             return false;
         }
+
+        if (!HasLuckyNumber)
+        {
+            Debug.LogWarning("No lucky number selected!");
+            return false;
+        }
+
         hasRolledForSecondChance = true;
 
         int rolledNumber = Random.Range(1, 101);
+#if UNITY_EDITOR
+        if (forceLuckyMatchForTesting)
+        {
+            rolledNumber = selectedLuckyNumber;
+        }
+#endif
 
-        if(rolledNumber == selectedLuckyNumber)
+        if (rolledNumber == selectedLuckyNumber)
         {
             Debug.Log("Congratulations! You rolled your lucky number: " + rolledNumber);
             return true;

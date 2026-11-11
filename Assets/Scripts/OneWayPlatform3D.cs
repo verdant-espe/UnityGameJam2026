@@ -1,5 +1,4 @@
 
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
@@ -8,114 +7,60 @@ public class OneWayPlatform3D : MonoBehaviour
     [SerializeField] private float clearance = 0.15f;
 
     private BoxCollider platformCollider;
+    private CharacterController player;
+    private bool ignoringCollision;
 
-    // Each platform remembers its collision state
-    // for every character it encounters.
-    private readonly Dictionary<CharacterController, bool>
-        ignoredCharacters = new Dictionary<CharacterController, bool>();
-
-    // Shared character list, refreshed periodically.
-    // This avoids searching the whole scene separately
-    // for every generated platform.
-    private static CharacterController[] allCharacters =
-        new CharacterController[0];
-
-    private static float nextSearchTime = -1f;
-
-    [RuntimeInitializeOnLoadMethod(
-        RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetCache()
-    {
-        allCharacters = new CharacterController[0];
-        nextSearchTime = -1f;
-    }
-
-    void Awake()
+    void Start()
     {
         platformCollider = GetComponent<BoxCollider>();
-    }
 
-    void OnDisable()
-    {
-        ignoredCharacters.Clear();
+        GameObject playerObject =
+            GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObject == null)
+        {
+            Debug.LogWarning("No Player-tagged object found.");
+            enabled = false;
+            return;
+        }
+
+        player = playerObject.GetComponent<CharacterController>();
+
+        if (player == null)
+        {
+            Debug.LogWarning("Player needs a CharacterController.");
+            enabled = false;
+            return;
+        }
+
+        // Ignore the platform when starting underneath it.
+        float feetY = player.bounds.min.y;
+        float platformTop = platformCollider.bounds.max.y;
+
+        ignoringCollision = feetY < platformTop - clearance;
+
+        Physics.IgnoreCollision(
+            player, platformCollider, ignoringCollision);
     }
 
     void Update()
     {
-        // Refresh the global character list about
-        // four times per second.
-        // This also discovers newly spawned enemies.
-        if (Time.time >= nextSearchTime)
-        {
-            allCharacters = FindObjectsByType<CharacterController>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
+        if (player == null) return;
 
-            nextSearchTime = Time.time + 0.25f;
-        }
-
+        float feetY = player.bounds.min.y;
         float platformTop = platformCollider.bounds.max.y;
 
-        foreach (CharacterController character in allCharacters)
+        // Once completely above, allow landing.
+        if (ignoringCollision && feetY > platformTop + clearance)
         {
-            if (character == null)
-                continue;
-
-            // Inactive enemies will be handled when spawned.
-            if (!character.enabled || !character.gameObject.activeInHierarchy)
-            {
-                ignoredCharacters.Remove(character);
-                continue;
-            }
-
-            float feetY = character.bounds.min.y;
-
-            // Set the correct collision state for
-            // a character we have not handled before.
-            if (!ignoredCharacters.TryGetValue(
-                character, out bool isIgnoring))
-            {
-                isIgnoring = feetY < platformTop - clearance;
-
-                Physics.IgnoreCollision(
-                    character,
-                    platformCollider,
-                    isIgnoring
-                );
-
-                ignoredCharacters[character] = isIgnoring;
-
-                continue;
-            }
-
-            // Character has moved completely above the platform.
-            // Restore collision so it can land.
-            if (isIgnoring &&
-                feetY > platformTop + clearance)
-            {
-                Physics.IgnoreCollision(
-                    character,
-                    platformCollider,
-                    false
-                );
-
-                ignoredCharacters[character] = false;
-            }
-
-            // Character is underneath the platform.
-            // Let it pass upward through the bottom.
-            else if (!isIgnoring &&
-                     feetY < platformTop - clearance)
-            {
-                Physics.IgnoreCollision(
-                    character,
-                    platformCollider,
-                    true
-                );
-
-                ignoredCharacters[character] = true;
-            }
+            Physics.IgnoreCollision(player, platformCollider, false);
+            ignoringCollision = false;
+        }
+        // Once below, allow jumping through.
+        else if (!ignoringCollision && feetY < platformTop - clearance)
+        {
+            Physics.IgnoreCollision(player, platformCollider, true);
+            ignoringCollision = true;
         }
     }
 }

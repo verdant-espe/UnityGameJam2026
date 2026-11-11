@@ -9,12 +9,8 @@ public class PlayerProjectile : MonoBehaviour
     [SerializeField] private float lifetime = 3f;
     [SerializeField] public float knockbackStrength = 8f;
 
-    [Header("Damage")]
-    [SerializeField] private int damage = 1;
-
     private Vector3 direction;
     private Rigidbody rb;
-    private bool hasHit;
 
     private void Awake()
     {
@@ -41,18 +37,13 @@ public class PlayerProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (hasHit)
-            return;
-
         // Ignore the player.
         if (other.GetComponentInParent<PlayerMovement>() != null)
         {
             return;
         }
 
-        hasHit = true;
-
-        // Apply knockback if the target supports it.
+        // Look for a knockback component on the target.
         KnockbackReceiver receiver =
             other.GetComponentInParent<KnockbackReceiver>();
 
@@ -64,16 +55,6 @@ public class PlayerProjectile : MonoBehaviour
             );
         }
 
-        // Damage any enemy that has EnemyHealth.
-        EnemyHealth enemyHealth =
-            other.GetComponentInParent<EnemyHealth>();
-
-        if (enemyHealth != null)
-        {
-            enemyHealth.TakeDamage(damage);
-        }
-
-        // Remove projectile after impact.
         Destroy(gameObject);
     }
 }

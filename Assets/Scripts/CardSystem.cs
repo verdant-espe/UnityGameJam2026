@@ -18,13 +18,10 @@ public class CardSystem : MonoBehaviour
     // References player shooting
     public PlayerShooting shooting;
 
-    public PlayerHealth playerHealth;
+    public PlayerHealth health;
 
     // References enemy
     public EnemyChase enemy;
-
-    // References enemy health
-    public EnemyHealth enemyHealth;
 
     // Checks if player has collected a card
     public bool hasCard;
@@ -60,33 +57,30 @@ public class CardSystem : MonoBehaviour
         // If player gets Card2, projectile damage is doubled but damage received is doubled as well
         if (other.gameObject.name == "Card2")
         {
-            enemyHealth.TakeDamage(2);
 
-            playerHealth.TakeDamage(2);
+            health.TakeDamage(2);
         }
 
         // If player gets Card3, projectile fire rate is increased but speed is decreased
         if (other.gameObject.name == "Card3")
         {
-            shooting.fireRate = 4.0f;
-
             player.speed = 3f;
+            shooting.fireRate = 4.0f;
         }
 
         // If player gets Card4, projectile gets increased knockback but a reduced fire rate
         if(other.gameObject.name == "Card4")
         {
             projectile.knockbackStrength = 12f;
-
             shooting.fireRate = 1.0f;
         }
 
         // If player gets Card5, health is regenerated but enemy moves faster
         if (other.gameObject.name == "Card5")
         {
-            if(playerHealth.CurrentHealth < playerHealth.MaxHealth)
+            if(health.CurrentHealth < health.MaxHealth)
             {
-                playerHealth.CurrentHealth = 7;
+                health.CurrentHealth = 7;
             }
 
             enemy.speed = 6f;

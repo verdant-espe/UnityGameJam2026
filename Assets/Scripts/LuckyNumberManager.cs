@@ -13,6 +13,9 @@ public class LuckyNumberManager : MonoBehaviour
     private string lastValidInput = "";
     private bool hasRolledForSecondChance= false;
 
+    public int LastRolledNumber { get; private set; } = -1;
+
+
     public void SetLuckyNumber(int number)
     { 
        if (number < 1 || number > 100)
@@ -78,6 +81,9 @@ public class LuckyNumberManager : MonoBehaviour
             rolledNumber = selectedLuckyNumber;
         }
 #endif
+
+        LastRolledNumber = rolledNumber;
+
 
         if (rolledNumber == selectedLuckyNumber)
         {

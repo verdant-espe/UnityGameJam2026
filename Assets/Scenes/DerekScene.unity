@@ -136,7 +136,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fdd1c965907004eb5eed07a4489e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 7
+  maxHealth: 25
+--- !u!114 &14619685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14619665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6de45587a0c4324085e7c9ae5d825be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
+  damage: 1
+  hitCooldown: 2.5
+  contactPadding: 0.2
+  horizontalStrength: 6
+  verticalStrength: 4
+  stunDuration: 0.15
 --- !u!4 &22895243 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fbdf5bcf24ae21642986413f9071c849, type: 3}
@@ -1392,6 +1410,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1741755655171172946, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
+      propertyPath: field of view
+      value: 85
+      objectReference: {fileID: 0}
     - target: {fileID: 2912523030980449353, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
       propertyPath: m_Name
       value: RabbitPlayer
@@ -1498,6 +1520,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSecondChance
   luckyNumberManager: {fileID: 552387301}
+  luckyRollPanel: {fileID: 1894904030}
+  diceAnimation: {fileID: 316319974}
+  diceResultText: {fileID: 47131231}
   reviveHealth: 7
   movementToDisable: {fileID: 657755470}
 --- !u!114 &657755473
@@ -1550,7 +1575,7 @@ MonoBehaviour:
   player: {fileID: 657755471}
   enemy: {fileID: 14619665}
   startingPlatform: {fileID: 695811844}
-  triggerHeight: 15
+  triggerHeight: 30
   platformClearance: 0.15
 --- !u!4 &707883931
 Transform:
@@ -1765,6 +1790,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSecondChance
   luckyNumberManager: {fileID: 552387301}
+  luckyRollPanel: {fileID: 0}
+  diceAnimation: {fileID: 0}
+  diceResultText: {fileID: 0}
   reviveHealth: 7
   movementToDisable: {fileID: 772888759}
 --- !u!20 &776198100 stripped
@@ -2303,6 +2331,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1246865519438318137, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4515242314939188751, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5995092603552992742, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -2315,6 +2351,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 657755471}
+    - target: {fileID: 6601207405720932629, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 6917261976637067431, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2362,6 +2402,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5995092603552992742, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 14619675}
+    - targetCorrespondingSourceObject: {fileID: 5995092603552992742, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 14619685}
   m_SourcePrefab: {fileID: 100100000, guid: b64107f0ce0e1154c814cafb99b9c43d, type: 3}
 --- !u!1 &1442406723
 GameObject:
@@ -2612,8 +2655,8 @@ MonoBehaviour:
   hardVerticalGap: {x: 4.5, y: 6.5}
   easyHorizontalStep: 9
   hardHorizontalStep: 14
-  easyWidthMultiplier: 1.45
-  hardWidthMultiplier: 0.7
+  easyWidthMultiplier: 4
+  hardWidthMultiplier: 3.5
   easyWidthVariation: 0.15
   hardWidthVariation: 0.25
   doubleJumpStartHeight: 150
@@ -2706,7 +2749,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1741370245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3212,6 +3255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2124903636}
+  - component: {fileID: 2124903637}
   m_Layer: 5
   m_Name: LuckyNumberPanel
   m_TagString: Untagged
@@ -3240,6 +3284,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2124903637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124903635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73e271122d8fa5340b4fbcc4551d99c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberEnter
+  confirmButton: {fileID: 1748440472}
 --- !u!1001 &4215237152610442035
 PrefabInstance:
   m_ObjectHideFlags: 0

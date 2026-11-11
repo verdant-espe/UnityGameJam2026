@@ -6,6 +6,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("Enemy Health")]
     [SerializeField] private int maxHealth = 7;
 
+    private EnemyAudio enemyAudio;
     public int CurrentHealth { get; private set; }
 
     public int MaxHealth
@@ -39,6 +40,12 @@ public class EnemyHealth : MonoBehaviour
             CurrentHealth + "/" + MaxHealth
         );
 
+        // Play a random vocal reaction to damage.
+        if (CurrentHealth > 0 && enemyAudio != null)
+        {
+            enemyAudio.PlayDamage();
+        }
+
         if (CurrentHealth <= 0)
         {
             Die();
@@ -50,6 +57,12 @@ public class EnemyHealth : MonoBehaviour
         isDead = true;
 
         Debug.Log(gameObject.name + " defeated!");
+
+        // Play the dedicated death sound.
+        if (enemyAudio != null)
+        {
+            enemyAudio.PlayDeath();
+        }
 
         // Remove the defeated enemy from the scene.
         Destroy(gameObject);
@@ -63,5 +76,10 @@ public class EnemyHealth : MonoBehaviour
         {
             TakeDamage(1);
         }
+    }
+
+    private void Awake()
+    {
+        enemyAudio = GetComponent<EnemyAudio>();
     }
 }

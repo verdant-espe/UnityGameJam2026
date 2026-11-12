@@ -7,6 +7,10 @@ public class PlatformGenerator : MonoBehaviour
     [SerializeField] private GameObject platformPrefab;
     [SerializeField] private Transform player;
 
+    [Header("Tarot Platform Settings")]
+    [SerializeField, Range(0f, 1f)]
+    private float tarotPlatformChance = 0.20f;
+
     [Header("Generation Settings")]
     [SerializeField] private int startingPlatforms = 15;
     [SerializeField] private float generateAheadDistance = 25f;
@@ -237,5 +241,16 @@ public class PlatformGenerator : MonoBehaviour
         Vector3 scale = newPlatform.transform.localScale;
         scale.x *= randomWidthMultiplier;
         newPlatform.transform.localScale = scale;
+
+
+        // Randomly turn 20% of generated platforms
+        // into tarot platforms.
+        if (Random.value < tarotPlatformChance)
+        {
+            newPlatform.AddComponent<TarotPlatform>();
+
+            Debug.Log("TAROT PLATFORM GENERATED!");
+        }
+
     }
 }

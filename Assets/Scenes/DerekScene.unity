@@ -1643,6 +1643,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2912523030980449353, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
       insertIndex: -1
       addedObject: {fileID: 657755472}
+    - targetCorrespondingSourceObject: {fileID: 2912523030980449353, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 657755474}
   m_SourcePrefab: {fileID: 100100000, guid: 91954b78b1304b44ca40cfe97dae6744, type: 3}
 --- !u!1 &657755468 stripped
 GameObject:
@@ -1703,6 +1706,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 7
+--- !u!114 &657755474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657755468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc828e0a2d9f084f893b628944eadf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TarotLandingDetector
 --- !u!65 &695811844 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: -5066876889816537855, guid: 9c7bf33716d96d94d988e9e33ba5ff8f, type: 3}
@@ -2982,6 +2997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlatformGenerator
   platformPrefab: {fileID: 8814611643101920493, guid: 9c7bf33716d96d94d988e9e33ba5ff8f, type: 3}
   player: {fileID: 657755471}
+  tarotPlatformChance: 0.2
   startingPlatforms: 15
   generateAheadDistance: 25
   minX: -14

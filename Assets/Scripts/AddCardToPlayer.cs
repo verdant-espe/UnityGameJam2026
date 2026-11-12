@@ -2,13 +2,19 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using System.Reflection.Emit;
+using Unity.VisualScripting;
 
 public class AddCardToPlayer : MonoBehaviour
 {
     // Makes a list of all the cards in the roulette roster
-    public List<GameObject> cards = new List<GameObject>();
+    public GameObject[] cards;
 
+    // References CardRoulette script
     private CardRoulette cardRoulette;
+
+    // References CardSystem script
+    private CardSystem cardSystem;
 
     // References roulette pointer
     public GameObject pointer;
@@ -25,6 +31,8 @@ public class AddCardToPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        cards = GameObject.FindGameObjectsWithTag("Card");
+
         // Assigns cardRoulette to all cards with the CardRoulette script
         cardRoulette = GameObject.Find("Card1").GetComponent<CardRoulette>();
         cardRoulette = GameObject.Find("Card2").GetComponent<CardRoulette>();
@@ -32,6 +40,14 @@ public class AddCardToPlayer : MonoBehaviour
         cardRoulette = GameObject.Find("Card4").GetComponent<CardRoulette>();
         cardRoulette = GameObject.Find("Card5").GetComponent<CardRoulette>();
         cardRoulette = GameObject.Find("Card6").GetComponent<CardRoulette>();
+
+        // Assigns cardSystem to all cards with the CardSystem script
+        cardSystem = GameObject.Find("Card1").GetComponent<CardSystem>();
+        cardSystem = GameObject.Find("Card2").GetComponent<CardSystem>();
+        cardSystem = GameObject.Find("Card3").GetComponent<CardSystem>();
+        cardSystem = GameObject.Find("Card4").GetComponent<CardSystem>();
+        cardSystem = GameObject.Find("Card5").GetComponent<CardSystem>();
+        cardSystem = GameObject.Find("Card6").GetComponent<CardSystem>();
 
         // Assigns pointer to pointer game object
         pointer = GetComponent<GameObject>();
@@ -50,14 +66,10 @@ public class AddCardToPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // If card enters trigger of the pointer, that card is selected and added to the card slot
-        if(pointer == other.gameObject.CompareTag("Card"))
+        // If card enters trigger of the pointer and roulette is stopped, that card is selected and added to the card slot
+        if(pointer == other.gameObject.CompareTag("Card") && rouletteSpin == false)
         {
-            // Loops through the list of cards and changes currentCard to the card the pointer landed on
-            //foreach (var card in cards)
-            //{
-                
-            //}
+            Debug.Log("A card has been selected!");
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System.Reflection.Emit;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class AddCardToPlayer : MonoBehaviour
 {
@@ -67,9 +68,14 @@ public class AddCardToPlayer : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // If card enters trigger of the pointer and roulette is stopped, that card is selected and added to the card slot
-        if(pointer == other.gameObject.CompareTag("Card") && rouletteSpin == false)
+        for(int i = 0; i < cards.Length; i++)
         {
-            Debug.Log("A card has been selected!");
+            if (pointer == other.gameObject.CompareTag("Card") && rouletteSpin == false)
+            {
+                Debug.Log("A card has been selected!");
+
+                currentCard = cards[i];
+            }
         }
     }
 }

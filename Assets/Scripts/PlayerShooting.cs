@@ -47,5 +47,10 @@ public class PlayerShooting : MonoBehaviour
         {
             projectileScript.Initialize(shootDirection);
         }
+        // Play a randomized gunshot when a projectile is fired.
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayRabbitGunshot();
+        }
     }
 }

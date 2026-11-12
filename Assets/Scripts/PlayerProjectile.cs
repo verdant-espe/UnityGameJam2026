@@ -71,6 +71,13 @@ public class PlayerProjectile : MonoBehaviour
         if (enemyHealth != null)
         {
             enemyHealth.TakeDamage(damage);
+
+            // Play a cloth impact when an enemy is shot.
+            if (SoundManager.Instance != null)
+            {
+                Debug.Log("Enemy impact sound triggered!");
+                SoundManager.Instance.PlayClothImpact();
+            }
         }
 
         // Remove projectile after impact.

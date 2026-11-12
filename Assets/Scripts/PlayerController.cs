@@ -241,6 +241,12 @@ public class PlayerMovement : MonoBehaviour
         float verticalStrength,
         float stunDuration)
     {
+
+        // Play a cloth impact when the rabbit is hit.
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayClothImpact();
+        }
         isJumpSquatting = false;
         jumpSquatTimer = 0f;
 
@@ -263,8 +269,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
     private void PerformJump()
     {
+        // Play the appropriate sound before consuming a jump.
+        if (SoundManager.Instance != null)
+        {
+            if (jumpsRemaining == maxJumps)
+            {
+                // First jump.
+                SoundManager.Instance.PlayRabbitJump();
+            }
+            else
+            {
+                // Double jump.
+                SoundManager.Instance.PlayRabbitDoubleJump();
+            }
+        }
+
         // Calculate jumping velocity.
         velocity.y = Mathf.Sqrt(
             jumpHeight * -2f * gravity
@@ -281,4 +303,5 @@ public class PlayerMovement : MonoBehaviour
             animationController.PlayAirborne();
         }
     }
+
 }

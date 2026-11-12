@@ -30,6 +30,12 @@ public class PlayerHealth : MonoBehaviour
 
         CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
 
+        // Play a random rabbit damage vocalization.
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayRabbitDamage();
+        }
+
         HealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
         Debug.Log("Player Health: " + CurrentHealth + "/" + MaxHealth);
@@ -37,6 +43,12 @@ public class PlayerHealth : MonoBehaviour
         if (CurrentHealth == 0)
         {
             IsDead = true;
+
+            // Play the rabbit's death vocalization.
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayRabbitDeath();
+            }
 
             Debug.Log("Health reached zero! Awaiting lucky-number result.");
 

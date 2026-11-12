@@ -82,6 +82,8 @@ public class EnemyChase : MonoBehaviour
     private float jumpStartupDuration;
     private float lungeStartupDuration;
 
+    private EnemyAudio enemyAudio;
+
     public bool IsLunging
     {
         get { return isLunging || isLungeStarting; }
@@ -107,7 +109,7 @@ public class EnemyChase : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-
+        enemyAudio = GetComponent<EnemyAudio>();
         // Remember the enemy's starting Z position.
         lockedZPosition = transform.position.z;
 
@@ -225,6 +227,12 @@ public class EnemyChase : MonoBehaviour
                     isLungeStarting = false;
                     isLunging = true;
                     lungeTimer = lungeDuration;
+
+                    // Vocalize when the lunge actually launches.
+                    if (enemyAudio != null)
+                    {
+                        enemyAudio.PlayLunge();
+                    }
 
                     // Launch upward into a shallow arc.
                     velocity.y = Mathf.Sqrt(
@@ -401,6 +409,13 @@ public class EnemyChase : MonoBehaviour
 
     void Jump()
     {
+
+        // Occasionally vocalize when jumping.
+        if (enemyAudio != null)
+        {
+            enemyAudio.PlayJump();
+        }
+
         velocity.y = Mathf.Sqrt(
             jumpHeight * -2f * gravity
         );

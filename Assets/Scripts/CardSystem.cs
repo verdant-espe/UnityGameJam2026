@@ -10,7 +10,7 @@ public class CardSystem : MonoBehaviour
     public PlayerMovement player;
 
     // References player projectiles
-    public PlayerProjectile projectile;
+    private PlayerProjectile projectile;
 
     // References player knockback
     public KnockbackReceiver kbReceiver;

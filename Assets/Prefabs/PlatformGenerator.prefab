@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1623525756927337553
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7289592306969634813}
+  - component: {fileID: 7464405602053910167}
+  m_Layer: 0
+  m_Name: PlatformGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7289592306969634813
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623525756927337553}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7464405602053910167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623525756927337553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1462ffb12e50a5d429f7c7ccdf6847f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlatformGenerator
+  platformPrefab: {fileID: 8814611643101920493, guid: 9c7bf33716d96d94d988e9e33ba5ff8f, type: 3}
+  player: {fileID: 0}
+  tarotPlatformChance: 0.2
+  startingPlatforms: 15
+  generateAheadDistance: 25
+  minX: -14
+  maxX: 14
+  fullDifficultyHeight: 1200
+  easyVerticalGap: {x: 3.5, y: 4.5}
+  hardVerticalGap: {x: 4.5, y: 6.5}
+  easyHorizontalStep: 9
+  hardHorizontalStep: 14
+  easyWidthMultiplier: 4
+  hardWidthMultiplier: 3.5
+  easyWidthVariation: 0.15
+  hardWidthVariation: 0.25
+  doubleJumpStartHeight: 150
+  doubleJumpFullChanceHeight: 400
+  maxDoubleJumpChance: 0.45
+  doubleJumpVerticalGap: {x: 8.5, y: 10}
+  doubleJumpHorizontalStep: 16

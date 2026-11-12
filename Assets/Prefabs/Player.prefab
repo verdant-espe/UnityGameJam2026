@@ -158,7 +158,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 85
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -278,6 +278,9 @@ GameObject:
   - component: {fileID: 1173169848326453429}
   - component: {fileID: 7737711079855394025}
   - component: {fileID: 5693492440451040450}
+  - component: {fileID: 5882780494740249522}
+  - component: {fileID: 3685188076513877130}
+  - component: {fileID: 1755301616794273399}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -529,6 +532,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 7
+--- !u!114 &5882780494740249522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912523030980449353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3662f5221d03a4c820fd00a254c8ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 7
+--- !u!114 &3685188076513877130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912523030980449353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fba06a4347615314da739bea82f1b207, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSecondChance
+  luckyNumberManager: {fileID: 0}
+  luckyRollPanel: {fileID: 0}
+  diceAnimation: {fileID: 0}
+  diceResultText: {fileID: 0}
+  diceCamera: {fileID: 0}
+  resultDisplayDuration: 2
+  reviveHealth: 7
+  movementToDisable: {fileID: 3130544431134060163}
+--- !u!114 &1755301616794273399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912523030980449353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc828e0a2d9f084f893b628944eadf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TarotLandingDetector
 --- !u!1 &5746630817453065231
 GameObject:
   m_ObjectHideFlags: 0

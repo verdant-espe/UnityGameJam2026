@@ -2,10 +2,15 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class EnemyAudio : MonoBehaviour
 {
+    [Header("Audio Source")]
+    [SerializeField] private AudioSource voiceSource;
+
     [Header("Voice Clips")]
     [SerializeField] private AudioClip[] vocalizations;
+    [SerializeField] private AudioClip[] damageVocalizations;
     [SerializeField] private AudioClip deathSound;
 
     [Header("Ambient Timing")]
@@ -27,6 +32,14 @@ public class EnemyAudio : MonoBehaviour
 
     private Coroutine ambientCoroutine;
     private bool isDead;
+
+    private void Awake()
+    {
+        if (voiceSource == null)
+        {
+            voiceSource = GetComponent<AudioSource>();
+        }
+    }
 
     private void OnEnable()
     {
@@ -59,46 +72,54 @@ public class EnemyAudio : MonoBehaviour
                 yield break;
             }
 
-            PlayRandomVoice();
-
-            // Occasionally play a second monkey sound.
-            if (Random.value < doubleSoundChance)
+            // Do not interrupt an existing vocalization.
+            if (!voiceSource.isPlaying)
             {
-                yield return new WaitForSeconds(secondSoundDelay);
+                PlayRandomClip(vocalizations);
 
-                if (!isDead)
+                // Occasionally play a second sound.
+                if (Random.value < doubleSoundChance)
                 {
-                    PlayRandomVoice();
+                    yield return new WaitForSeconds(
+                        secondSoundDelay
+                    );
+
+                    if (!isDead && !voiceSource.isPlaying)
+                    {
+                        PlayRandomClip(vocalizations);
+                    }
                 }
             }
         }
     }
 
-    private void PlayRandomVoice()
+    private void PlayRandomClip(AudioClip[] clips)
     {
-        if (SoundManager.Instance == null)
+        if (voiceSource == null ||
+            clips == null ||
+            clips.Length == 0)
         {
             return;
         }
 
-        if (vocalizations == null ||
-            vocalizations.Length == 0)
+        int index = Random.Range(0, clips.Length);
+
+        if (clips[index] == null)
         {
             return;
         }
 
-        int index = Random.Range(0, vocalizations.Length);
-
-        SoundManager.Instance.PlaySFX(
-            vocalizations[index]
-        );
+        // Interrupt the previous enemy vocalization.
+        voiceSource.Stop();
+        voiceSource.clip = clips[index];
+        voiceSource.Play();
     }
 
     public void PlayJump()
     {
         if (!isDead && Random.value < jumpChance)
         {
-            PlayRandomVoice();
+            PlayRandomClip(vocalizations);
         }
     }
 
@@ -106,15 +127,26 @@ public class EnemyAudio : MonoBehaviour
     {
         if (!isDead)
         {
-            PlayRandomVoice();
+            PlayRandomClip(vocalizations);
         }
     }
 
     public void PlayDamage()
     {
-        if (!isDead && Random.value < damageChance)
+        if (isDead || Random.value >= damageChance)
         {
-            PlayRandomVoice();
+            return;
+        }
+
+        // Use specialized damage clips when available.
+        if (damageVocalizations != null &&
+            damageVocalizations.Length > 0)
+        {
+            PlayRandomClip(damageVocalizations);
+        }
+        else
+        {
+            PlayRandomClip(vocalizations);
         }
     }
 
@@ -127,6 +159,13 @@ public class EnemyAudio : MonoBehaviour
 
         isDead = true;
 
+        if (voiceSource != null)
+        {
+            voiceSource.Stop();
+        }
+
+        // Play through SoundManager so the death
+        // sound survives destruction of this enemy.
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlaySFX(deathSound);

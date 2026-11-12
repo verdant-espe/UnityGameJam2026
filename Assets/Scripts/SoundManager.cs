@@ -34,6 +34,8 @@ public class SoundManager : MonoBehaviour
     [Header("Rabbit - Damage")]
     [SerializeField] private AudioClip[] rabbitDamage;
 
+    [SerializeField] private AudioClip rabbitDeath;
+
     [Header("Damage Impacts")]
     [SerializeField] private AudioClip[] clothImpacts;
 
@@ -112,6 +114,11 @@ public class SoundManager : MonoBehaviour
     {
         // Randomize the impact sample.
         PlayRandomSFX(clothImpacts, 0.8f);
+    }
+
+    public void PlayRabbitDeath()
+    {
+        PlaySFX(rabbitDeath);
     }
 
     public void PlayMusic(AudioClip clip)

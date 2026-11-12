@@ -332,4 +332,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4b01b47937b66e24585d66f6420a9ceb, type: 3}
   - {fileID: 8300000, guid: 9008c829f0306df44ab3bf9d5f195023, type: 3}
   - {fileID: 8300000, guid: 18b9cf4acc6454746bf11cbb1a15ab0e, type: 3}
-  rabbitDamage: []
+  - {fileID: 8300000, guid: 0f6c463c94ebcde458dfe62301d73944, type: 3}
+  - {fileID: 8300000, guid: 5895f19c0702f944db38e59e11479a95, type: 3}
+  - {fileID: 8300000, guid: b0b1f1f8823c8bd4f8a37c04d0331306, type: 3}
+  rabbitDamage:
+  - {fileID: 8300000, guid: 733cadcfad736fa42ad09b6946f571ba, type: 3}
+  - {fileID: 8300000, guid: 2b9d705caeb4ae84383dad5f8f39b867, type: 3}
+  - {fileID: 8300000, guid: 36e305ba0fa761d44884d00ad471841c, type: 3}
+  - {fileID: 8300000, guid: 2727c5b5233d1ab41b56d2b4b646c09e, type: 3}
+  - {fileID: 8300000, guid: 915c0e4c07b986a47a0eb7ed748899e7, type: 3}
+  - {fileID: 8300000, guid: cdfe9b182a6794a438202e2fa334ba88, type: 3}
+  rabbitDeath: {fileID: 8300000, guid: d7f0a07e0c6624343983b5b949c7987e, type: 3}
+  clothImpacts:
+  - {fileID: 8300000, guid: d225a742668ca524f986e842080b7ba8, type: 3}
+  - {fileID: 8300000, guid: 2fad823dd723d2c4e8bc5ddc51c6b6be, type: 3}
+  - {fileID: 8300000, guid: 1ee5c6d78cfcdc049956fd785b2fb791, type: 3}

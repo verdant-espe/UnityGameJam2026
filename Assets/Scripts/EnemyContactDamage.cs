@@ -32,37 +32,37 @@ public class EnemyContactDamage : MonoBehaviour
             return;
 
         // Calculate the spider's collision capsule.
-        Vector3 center =
-            transform.TransformPoint(controller.center);
 
-        Vector3 scale = transform.lossyScale;
+        // Use the spider's large trigger Box Collider as its damage area.
+        BoxCollider hitbox = GetComponent<BoxCollider>();
 
-        float radius = controller.radius *
-            Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.z));
+        if (hitbox == null || !hitbox.enabled || !hitbox.isTrigger)
+            return;
 
-        float height =
-            controller.height * Mathf.Abs(scale.y);
+        Vector3 center = hitbox.transform.TransformPoint(hitbox.center);
 
-        float halfSegment =
-            Mathf.Max(0f, height * 0.5f - radius);
+        Vector3 scale = hitbox.transform.lossyScale;
 
-        Vector3 bottom =
-            center - Vector3.up * halfSegment;
+        Vector3 halfExtents = Vector3.Scale(
+            hitbox.size * 0.5f,
+            new Vector3(
+                Mathf.Abs(scale.x),
+                Mathf.Abs(scale.y),
+                Mathf.Abs(scale.z)
+            )
+        );
 
-        Vector3 top =
-            center + Vector3.up * halfSegment;
+        halfExtents += Vector3.one * contactPadding;
 
-        // Look for colliders touching or very close
-        // to the spider's body.
-        Collider[] contacts = Physics.OverlapCapsule(
-            bottom,
-            top,
-            radius + contactPadding,
+        Collider[] contacts = Physics.OverlapBox(
+            center,
+            halfExtents,
+            hitbox.transform.rotation,
             ~0,
             QueryTriggerInteraction.Ignore
         );
 
-        foreach (Collider contact in contacts)
+               foreach (Collider contact in contacts)
         {
             PlayerHealth playerHealth =
                 contact.GetComponentInParent<PlayerHealth>();

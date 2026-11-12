@@ -5,22 +5,16 @@ using System.Collections;
 
 public class CardRoulette : MonoBehaviour
 {
-    // References the CardSystem script
-    private CardSystem cardSystem;
-
     // All of the cards in roulette roster
     public GameObject card;
 
     // Speed when moving
     public float moveSpeed = 1000f;
 
-    public bool canPressSpace = false;
+    private bool canPressSpace = false;
 
     // Starting position of cards
     private Vector3 startPos;
-
-    // Start position of roulette
-    private Vector3 cardPos;
 
     // Sets position at which the roulette repeats
     private float repeatPos;
@@ -28,9 +22,6 @@ public class CardRoulette : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Tracks the position of each card
-        cardPos = GameObject.FindGameObjectWithTag("Card").transform.position;
-
         // Sets repeating point
         repeatPos = GetComponent<BoxCollider>().size.x;
 
@@ -57,9 +48,9 @@ public class CardRoulette : MonoBehaviour
 
     IEnumerator WaitToPressSpace()
     {
-        Debug.Log("Please wait 5 seconds to press the spacebar.");
-        yield return new WaitForSeconds(5);
-        Debug.Log("NOW");
+        Debug.Log("Please wait 3 seconds to press the spacebar.");
+        yield return new WaitForSeconds(3);
+        Debug.Log("Press the spacebar now!");
         canPressSpace = true;
     }
 }

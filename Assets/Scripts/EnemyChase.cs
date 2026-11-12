@@ -61,6 +61,17 @@ public class EnemyChase : MonoBehaviour
     [Header("2D Movement Plane")]
     [SerializeField] private bool lockZAxis = true;
 
+    [Header("Platform Navigation")]
+    [SerializeField] private bool usePlatformNavigation = true;
+    [SerializeField] private float platformSearchRadius = 15f;
+    [SerializeField] private float maxPlatformStepHeight = 12f;
+
+
+    [Header("Attack Recovery")]
+    [SerializeField] private float hitRecoveryDuration = 2f;
+    private float hitRecoveryTimer;
+
+
     private float lockedZPosition;
 
     private CharacterController controller;
@@ -104,6 +115,11 @@ public class EnemyChase : MonoBehaviour
     public float HorizontalSpeed
     {
         get { return horizontalSpeed; }
+    }
+
+    public void BeginHitRecovery()
+    {
+        hitRecoveryTimer = hitRecoveryDuration;
     }
 
     void Start()
@@ -179,6 +195,20 @@ public class EnemyChase : MonoBehaviour
         float predictedX = player.position.x +
             playerHorizontalVelocity * predictionTime;
 
+                    float targetX = predictedX;
+
+        if (usePlatformNavigation &&
+            player.position.y >
+            transform.position.y + maxPlatformStepHeight)
+        {
+            targetX = FindNextPlatformX(predictedX);
+        }
+
+
+        float targetDistance =
+            Mathf.Abs(targetX - transform.position.x);
+
+
         float distance =
             Mathf.Abs(player.position.x - transform.position.x);
 
@@ -199,6 +229,18 @@ public class EnemyChase : MonoBehaviour
         {
             isStunned = knockbackReceiver.IsStunned;
         }
+
+
+        if (hitRecoveryTimer > 0f)
+        {
+            hitRecoveryTimer = Mathf.Max(
+                0f,
+                hitRecoveryTimer - deltaTime
+            );
+
+            isStunned = true;
+        }
+
 
         // COOLDOWN
         if (cooldownTimer > 0f)
@@ -322,11 +364,12 @@ public class EnemyChase : MonoBehaviour
         {
             float direction = 0f;
 
+
             if (distance <= chaseRange &&
-                distance > stopDistance)
+                targetDistance > stopDistance)
             {
                 direction = Mathf.Sign(
-                    predictedX - transform.position.x
+                    targetX - transform.position.x
                 );
             }
 
@@ -406,6 +449,62 @@ public class EnemyChase : MonoBehaviour
             transform.position = correctedPosition;
         }
     }
+
+    private float FindNextPlatformX(float fallbackX)
+    {
+        if (!usePlatformNavigation || player == null)
+            return fallbackX;
+
+        float feetY = controller.bounds.min.y;
+
+        Collider[] nearbyPlatforms = Physics.OverlapSphere(
+            transform.position,
+            platformSearchRadius,
+            groundLayer,
+            QueryTriggerInteraction.Ignore
+        );
+
+        float bestScore = float.MaxValue;
+        float bestX = fallbackX;
+
+        foreach (Collider platform in nearbyPlatforms)
+        {
+            if (platform == controller)
+                continue;
+
+            float heightAbove =
+                platform.bounds.max.y - feetY;
+
+            // Only consider platforms above the spider
+            // that are within its allowed climbing range.
+            if (heightAbove < 1f ||
+                heightAbove > maxPlatformStepHeight)
+                continue;
+
+            float platformX = platform.bounds.center.x;
+
+            float horizontalDistance =
+                Mathf.Abs(platformX - transform.position.x);
+
+            float playerDistance =
+                Mathf.Abs(platformX - player.position.x);
+
+            // Prefer nearby platforms that lead
+            // in the rabbit's direction.
+            float score = heightAbove +
+                horizontalDistance * 0.3f +
+                playerDistance * 0.2f;
+
+            if (score < bestScore)
+            {
+                bestScore = score;
+                bestX = platformX;
+            }
+        }
+
+        return bestX;
+    }
+
 
     void Jump()
     {

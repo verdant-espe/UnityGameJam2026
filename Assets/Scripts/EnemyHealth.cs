@@ -16,6 +16,8 @@ public class EnemyHealth : MonoBehaviour
 
     private bool isDead = false;
 
+    public event System.Action<EnemyHealth> Defeated;
+
     void OnEnable()
     {
         // Start with full health whenever this
@@ -49,7 +51,7 @@ public class EnemyHealth : MonoBehaviour
         if (CurrentHealth <= 0)
         {
             Die();
-        }
+                   }
     }
 
     private void Die()
@@ -65,7 +67,8 @@ public class EnemyHealth : MonoBehaviour
         }
 
         // Remove the defeated enemy from the scene.
-        Destroy(gameObject);
+        Defeated?.Invoke(this);
+        gameObject.SetActive(false);
     }
 
     // Temporary testing option in the Inspector.

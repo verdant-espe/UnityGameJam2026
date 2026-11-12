@@ -42,7 +42,7 @@ public class D100RollAnimation : MonoBehaviour
 
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
             float progress = Mathf.Clamp01(elapsed / duration);
 
@@ -70,7 +70,7 @@ public class D100RollAnimation : MonoBehaviour
 
             transform.Rotate(
                 tumbleAxis,
-                spinSpeed * slowingSpin * Time.deltaTime,
+                spinSpeed * slowingSpin * Time.unscaledDeltaTime,
                 Space.Self
             );
 

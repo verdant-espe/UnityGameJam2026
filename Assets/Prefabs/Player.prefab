@@ -276,6 +276,8 @@ GameObject:
   - component: {fileID: 3442921358465486457}
   - component: {fileID: 4631460941255930691}
   - component: {fileID: 1173169848326453429}
+  - component: {fileID: 7737711079855394025}
+  - component: {fileID: 5693492440451040450}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -342,7 +344,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 3.6
-  m_Radius: 0.5000001
+  m_Radius: 1.04
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -366,9 +368,15 @@ MonoBehaviour:
   jumpHeight: 7
   gravity: -20
   maxJumps: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckDistance: 0.15
+  groundCheckRadiusMultiplier: 0.8
   animationController: {fileID: 3442921358465486457}
-  jumpSquatDuration: 0.25
+  jumpSquatDuration: 0.1
   knockbackDecay: 12
+  lockZAxis: 1
 --- !u!212 &5922222211283942719
 SpriteRenderer:
   serializedVersion: 2
@@ -464,7 +472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
   animator: {fileID: 8410639155052677474}
   controller: {fileID: 564871192630777597}
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 5922222211283942719}
   movementThreshold: 0.1
 --- !u!114 &4631460941255930691
 MonoBehaviour:
@@ -496,6 +504,31 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4889128527065980504, guid: fdc599eae1a48fa4e93da021243ced0c, type: 3}
   firePoint: {fileID: 2970731814777174002}
   fireRate: 0.2
+--- !u!114 &7737711079855394025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912523030980449353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf35dc58846bcc04f89a76537895a051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RabbitAudioEvents
+--- !u!114 &5693492440451040450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912523030980449353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3662f5221d03a4c820fd00a254c8ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 7
 --- !u!1 &5746630817453065231
 GameObject:
   m_ObjectHideFlags: 0

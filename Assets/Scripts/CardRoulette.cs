@@ -1,22 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
 public class CardRoulette : MonoBehaviour
 {
-    private CardSystem cardSystem;
-
     // All of the cards in roulette roster
     public GameObject card;
 
     // Speed when moving
-    private float moveSpeed = 1000f;
+    public float moveSpeed = 1000f;
+
+    private bool canPressSpace = false;
 
     // Starting position of cards
     private Vector3 startPos;
-
-    // Start position of roulette
-    private Vector3 cardPos;
 
     // Sets position at which the roulette repeats
     private float repeatPos;
@@ -24,11 +22,10 @@ public class CardRoulette : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Tracks the position of each card
-        cardPos = GameObject.FindGameObjectWithTag("Card").transform.position;
-
         // Sets repeating point
         repeatPos = GetComponent<BoxCollider>().size.x;
+
+        StartCoroutine(WaitToPressSpace());
     }
 
     // Update is called once per frame
@@ -37,13 +34,23 @@ public class CardRoulette : MonoBehaviour
         // Moves cards left
         transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
 
-        // Gradually reduces the speed
-        moveSpeed = 0.9995f * moveSpeed;
-
         // Move card1 back to start once it reaches the repeating point
         if (card.transform.position.x < startPos.x - repeatPos)
         {
             card.transform.position = new Vector3(1992, 450, 0);
         }
+
+        if(canPressSpace && Input.GetKeyDown(KeyCode.Space))
+        {
+            moveSpeed = 0;
+        }
+    }
+
+    IEnumerator WaitToPressSpace()
+    {
+        Debug.Log("Please wait 3 seconds to press the spacebar.");
+        yield return new WaitForSeconds(3);
+        Debug.Log("Press the spacebar now!");
+        canPressSpace = true;
     }
 }

@@ -1191,12 +1191,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 552387300}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a4ac0da7976fbf042bbcb66f02e9b559, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberManager
-  forceLuckyMatchForTesting: 0
+  forceLuckyMatchForTesting: 1
   luckyNumberInput: {fileID: 939201260}
   luckyNumberPanel: {fileID: 2124903635}
 --- !u!4 &552387302
@@ -1523,6 +1523,8 @@ MonoBehaviour:
   luckyRollPanel: {fileID: 1894904030}
   diceAnimation: {fileID: 316319974}
   diceResultText: {fileID: 47131231}
+  diceCamera: {fileID: 1741370247}
+  resultDisplayDuration: 2
   reviveHealth: 7
   movementToDisable: {fileID: 657755470}
 --- !u!114 &657755473
@@ -1793,6 +1795,8 @@ MonoBehaviour:
   luckyRollPanel: {fileID: 0}
   diceAnimation: {fileID: 0}
   diceResultText: {fileID: 0}
+  diceCamera: {fileID: 0}
+  resultDisplayDuration: 2
   reviveHealth: 7
   movementToDisable: {fileID: 772888759}
 --- !u!20 &776198100 stripped

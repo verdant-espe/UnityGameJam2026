@@ -1,75 +1,119 @@
-using NUnit.Framework;
+
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
-using System.Reflection.Emit;
-using Unity.VisualScripting;
+using TMPro;
+using System.Collections;
 
 public class AddCardToPlayer : MonoBehaviour
 {
-    // Makes a list of all the cards in the roulette roster
+    [Header("Roulette Cards")]
     public GameObject[] cards;
 
-    // References CardRoulette script
-    private CardRoulette cardRoulette;
-
-    // References CardSystem script
-    private CardSystem cardSystem;
-
-    // References roulette pointer
+    [Header("Existing UI References")]
     public GameObject pointer;
-
-    // References card slot
     public GameObject currentCard;
+    [SerializeField] private TMP_Text activeCardText;
+    [SerializeField] private CardSystem cardSystem;
 
-    // Set to true on default until roulette is stopped
     public bool rouletteSpin = true;
-
-    // Set to false on default until pointer lands on a card
     public bool landedOnCard = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject SelectedCard { get; private set; }
+
+    private bool hasSeenMovement;
+    private bool hasSelectedCard;
+
+    private void OnEnable()
     {
-        cards = GameObject.FindGameObjectsWithTag("Card");
-
-        // Assigns cardRoulette to all cards with the CardRoulette script
-        cardRoulette = GameObject.Find("Card1").GetComponent<CardRoulette>();
-        cardRoulette = GameObject.Find("Card2").GetComponent<CardRoulette>();
-        cardRoulette = GameObject.Find("Card3").GetComponent<CardRoulette>();
-        cardRoulette = GameObject.Find("Card4").GetComponent<CardRoulette>();
-        cardRoulette = GameObject.Find("Card5").GetComponent<CardRoulette>();
-        cardRoulette = GameObject.Find("Card6").GetComponent<CardRoulette>();
-
-        // Assigns cardSystem to all cards with the CardSystem script
-        cardSystem = GameObject.Find("Card1").GetComponent<CardSystem>();
-        cardSystem = GameObject.Find("Card2").GetComponent<CardSystem>();
-        cardSystem = GameObject.Find("Card3").GetComponent<CardSystem>();
-        cardSystem = GameObject.Find("Card4").GetComponent<CardSystem>();
-        cardSystem = GameObject.Find("Card5").GetComponent<CardSystem>();
-        cardSystem = GameObject.Find("Card6").GetComponent<CardSystem>();
-
-        // Assigns pointer to pointer game object
-        pointer = GetComponent<GameObject>();
+        rouletteSpin = true;
+        landedOnCard = false;
+        hasSeenMovement = false;
+        hasSelectedCard = false;
+        SelectedCard = null;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        // If roulette is stopped upon hitting space, rouletteSpin is set to false and landedOnCard is set to true
-        if(Input.GetKey("space") && cardRoulette.moveSpeed == 0)
+        if (hasSelectedCard || cards == null || cards.Length == 0)
+            return;
+
+        bool allCardsStopped = true;
+
+        foreach (GameObject card in cards)
         {
-            rouletteSpin = false;
-            landedOnCard = true;
+            if (card == null)
+                return;
+
+            CardRoulette roulette = card.GetComponent<CardRoulette>();
+
+            if (roulette == null)
+                return;
+
+            if (roulette.moveSpeed > 0f)
+            {
+                hasSeenMovement = true;
+                allCardsStopped = false;
+            }
+        }
+
+        if (!hasSeenMovement || !allCardsStopped)
+            return;
+
+        // Select one random card once the roulette stops.
+        int randomIndex = Random.Range(0, cards.Length);
+
+        SelectedCard = cards[randomIndex];
+
+        
+        if (cardSystem != null)
+        {
+            cardSystem.ApplyCard(SelectedCard);
+        }
+        else
+        {
+            Debug.LogWarning("CardSystem not found on Roulette!");
+        }
+
+        // Get the name printed on the randomly selected card.
+        TMP_Text cardLabel = SelectedCard.GetComponentInChildren<TMP_Text>();
+
+        string cardName = cardLabel != null
+            ? cardLabel.text
+            : SelectedCard.name;
+
+        // Display the actual winning card.
+        if (activeCardText != null)
+        {
+            activeCardText.text = "Selected Card: " + cardName;
+        }
+
+        hasSelectedCard = true;
+        rouletteSpin = false;
+        landedOnCard = true;
+
+        Debug.Log(
+    gameObject.name + " [ID: " + GetInstanceID() +
+    "] SELECTED: " + SelectedCard.name,
+    this
+);
+        StartCoroutine(CloseRouletteAfterDelay());
+
+    }
+
+
+    private IEnumerator CloseRouletteAfterDelay()
+    {
+        // Wait two seconds, even while the game is paused.
+        yield return new WaitForSecondsRealtime(2f);
+
+        TarotRouletteOpener opener =
+            FindFirstObjectByType<TarotRouletteOpener>();
+
+        if (opener != null)
+        {
+            opener.CloseRoulette();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        // If card enters trigger of the pointer and roulette is stopped, that card is selected and added to the card slot
-        if(pointer == other.gameObject.CompareTag("Card") && rouletteSpin == false)
-        {
-            Debug.Log("A card has been selected!");
-        }
-    }
+
+
 }

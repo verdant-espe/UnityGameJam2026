@@ -6,6 +6,8 @@ public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     [SerializeField] public int maxHealth = 7;
+    [Header("Tarot Effects")]
+    public int damageTakenMultiplier = 1;
 
     public int CurrentHealth { get; set; }
     public int MaxHealth => maxHealth;
@@ -25,10 +27,15 @@ public class PlayerHealth : MonoBehaviour
     // Called when an enemy damages the player.
     public void TakeDamage(int damage)
     {
+
         if (IsDead || damage <= 0)
             return;
 
+        // Apply any tarot damage penalty.
+        damage *= damageTakenMultiplier;
+
         CurrentHealth = Mathf.Max(0, CurrentHealth - damage);
+
 
         // Play a random rabbit damage vocalization.
         if (SoundManager.Instance != null)

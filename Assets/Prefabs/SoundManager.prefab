@@ -306,7 +306,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   musicSource: {fileID: 8052291004892914558}
   sfxSource: {fileID: 7497822312806004647}
-  backgroundMusic: {fileID: 0}
+  titleMusic: {fileID: 8300000, guid: c4708b225118c14449564d821b1351ac, type: 3}
+  gameplayMusic: {fileID: 8300000, guid: b27fb8b65a031724d82976ff41801228, type: 3}
+  gameOverMusic: {fileID: 8300000, guid: 59a06f11b78c8c142967b20a9f0bdd15, type: 3}
   musicVolume: 0.7
   sfxVolume: 1
   rabbitFootsteps:

@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerHealth))]
 public class PlayerSecondChance : MonoBehaviour
@@ -50,22 +51,38 @@ public class PlayerSecondChance : MonoBehaviour
         }
     }
 
+
     void HandlePlayerDeath()
     {
         if (isResolvingDeath)
-            return;
-
-        // The player only receives one second-chance roll.
-        if (luckyNumberManager == null ||
-            !luckyNumberManager.HasLuckyNumber ||
-            luckyNumberManager.LastRolledNumber != -1)
         {
+            Debug.Log("Second chance already resolving.");
+            return;
+        }
+
+        if (luckyNumberManager == null)
+        {
+            Debug.LogError("SECOND CHANCE: LuckyNumberManager is missing!");
             ShowGameOver("GAME OVER");
             return;
         }
 
+        Debug.Log("Has Lucky Number: " + luckyNumberManager.HasLuckyNumber);
+        Debug.Log("Last Rolled Number: " + luckyNumberManager.LastRolledNumber);
+        Debug.Log("Dice Animation Assigned: " + (diceAnimation != null));
+
+        if (!luckyNumberManager.HasLuckyNumber ||
+            luckyNumberManager.LastRolledNumber != -1)
+        {
+            Debug.LogWarning("SECOND CHANCE: Skipping dice animation.");
+            ShowGameOver("GAME OVER");
+            return;
+        }
+
+        Debug.Log("SECOND CHANCE: Starting dice animation.");
         StartCoroutine(SecondChanceRoutine());
     }
+
 
     private IEnumerator SecondChanceRoutine()
     {
@@ -142,23 +159,17 @@ public class PlayerSecondChance : MonoBehaviour
         }
     }
 
+
     private void ShowGameOver(string message)
     {
-        if (luckyRollPanel != null)
-            luckyRollPanel.SetActive(true);
+        Debug.Log("GAME OVER! " + message);
 
-        if (diceResultText != null)
-            diceResultText.text = message;
+        // Restore normal time before changing scenes.
+        Time.timeScale = 1f;
+        pausedBySecondChance = false;
 
-        if (diceCamera != null)
-            diceCamera.gameObject.SetActive(false);
-
-        if (movementToDisable != null)
-            movementToDisable.enabled = false;
-
-        Time.timeScale = 0f;
-        pausedBySecondChance = true;
-
-        Debug.Log("GAME OVER!");
+        // Load the separate Game Over scene.
+        SceneManager.LoadScene("GameOverScene");
     }
+
 }

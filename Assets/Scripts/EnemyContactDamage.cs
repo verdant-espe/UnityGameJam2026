@@ -108,11 +108,21 @@ public class EnemyContactDamage : MonoBehaviour
                 }
 
 
+
                 EnemyChase enemyChase = GetComponent<EnemyChase>();
 
-                if (enemyChase != null)
+                if (enemyChase != null && enemyChase.enabled)
                 {
                     enemyChase.BeginHitRecovery();
+                }
+
+                // Flying enemies use their own movement controller.
+                GenieFloatChase genieChase =
+                    GetComponent<GenieFloatChase>();
+
+                if (genieChase != null && genieChase.enabled)
+                {
+                    genieChase.BeginHitRecovery();
                 }
 
 

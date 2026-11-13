@@ -12,13 +12,15 @@ GameObject:
   - component: {fileID: 5595438049132084478}
   - component: {fileID: 5399108252024967851}
   - component: {fileID: 279993102490103728}
-  - component: {fileID: 7229927711937780633}
-  - component: {fileID: 3159419527704379254}
   - component: {fileID: 9167225888653875725}
   - component: {fileID: 4852433793637298688}
   - component: {fileID: 3254028870619573681}
   - component: {fileID: 261286085539786590}
   - component: {fileID: 8618646712210376283}
+  - component: {fileID: 7341060196526231740}
+  - component: {fileID: 4485951979446531153}
+  - component: {fileID: 1414135818644024721}
+  - component: {fileID: 3395200730006048155}
   m_Layer: 0
   m_Name: Genie
   m_TagString: Untagged
@@ -147,64 +149,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7229927711937780633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7041260377333615186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 071f1bada9915104399aeba33677b771, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyChase
-  player: {fileID: 0}
-  speed: 8
-  acceleration: 10
-  chaseRange: 25
-  stopDistance: 1.5
-  predictionTime: 0.3
-  jumpHeight: 3
-  gravity: -20
-  jumpTriggerHeight: 1
-  maxJumps: 2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheckDistance: 1
-  groundCheckRadiusMultiplier: 0.8
-  lungeRange: 10
-  lungeSpeed: 15
-  lungeDuration: 0.5
-  lungeCooldown: 2
-  lungeVerticalTolerance: 5
-  lungeJumpHeight: 2
-  lungeStartupFrames: 9
-  animationFrameRate: 60
-  spriteRenderer: {fileID: 5595438049132084478}
-  facesRightByDefault: 0
-  knockbackReceiver: {fileID: 4852433793637298688}
-  lockZAxis: 1
---- !u!114 &3159419527704379254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7041260377333615186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8d4c5ce775107244af2a03261e71689, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationController
-  animator: {fileID: 5399108252024967851}
-  enemyChase: {fileID: 7229927711937780633}
-  idleState: Idle
-  runState: Run
-  jumpState: Jump
-  lungeState: Lunge
-  movementThreshold: 0.1
 --- !u!114 &9167225888653875725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,3 +321,87 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7341060196526231740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7041260377333615186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a62ce6916bc16b4589fade2c9a00c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GenieFloatChase
+  player: {fileID: 0}
+  floatSpeed: 6
+  hoverHeight: 1
+  stopDistance: 1.5
+  chaseRange: 25
+  lungeRange: 15
+  lungeSpeed: 12
+  lungeDuration: 0.35
+  lungeCooldown: 2
+  lungeStartupFrames: 9
+  animationFrameRate: 60
+  spriteRenderer: {fileID: 5595438049132084478}
+  facesRightByDefault: 0
+  knockbackReceiver: {fileID: 4852433793637298688}
+  hitRecoveryDuration: 2
+--- !u!114 &4485951979446531153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7041260377333615186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1734f4219ef3354abc908832b735f2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GenieAnimationController
+  animator: {fileID: 5399108252024967851}
+  genieChase: {fileID: 7341060196526231740}
+  idleState: Idle
+  runState: Run
+  lungeState: Lunge
+  movementThreshold: 0.1
+--- !u!114 &1414135818644024721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7041260377333615186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6de45587a0c4324085e7c9ae5d825be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyContactDamage
+  damage: 1
+  hitCooldown: 2.5
+  contactPadding: 0.2
+  horizontalStrength: 10
+  verticalStrength: 20
+  stunDuration: 0.15
+--- !u!65 &3395200730006048155
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7041260377333615186}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.59, y: 7.42, z: 4.55}
+  m_Center: {x: 0, y: 0.2, z: -1.44}

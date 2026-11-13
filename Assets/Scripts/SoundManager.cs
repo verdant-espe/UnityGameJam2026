@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
@@ -9,8 +10,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
 
-    [Header("Music")]
-    [SerializeField] private AudioClip backgroundMusic;
+    [Header("Scene Music")]
+    [SerializeField] private AudioClip titleMusic;
+    [SerializeField] private AudioClip gameplayMusic;
+    [SerializeField] private AudioClip gameOverMusic;
 
     [SerializeField, Range(0f, 1f)]
     private float musicVolume = 0.7f;
@@ -41,6 +44,7 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
+        // Only one SoundManager can exist.
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -48,43 +52,98 @@ public class SoundManager : MonoBehaviour
         }
 
         Instance = this;
+
+        // Keep the manager and its AudioSources between scenes.
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Start()
     {
-        if (musicSource != null && backgroundMusic != null)
+        // Start the correct music when the game first launches.
+        PlayMusicForScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Stop sound effects left over from the previous scene.
+        if (sfxSource != null)
         {
-            musicSource.clip = backgroundMusic;
-            musicSource.volume = musicVolume;
-            musicSource.loop = true;
-            musicSource.Play();
+            sfxSource.Stop();
+        }
+
+        // Switch to the music assigned to the new scene.
+        PlayMusicForScene(scene.name);
+    }
+
+
+    private void PlayMusicForScene(string sceneName)
+    {
+        if (sceneName == "TitleScene")
+        {
+            PlayMusic(titleMusic);
+        }
+        else if (sceneName == "GameScene")
+        {
+            PlayMusic(gameplayMusic);
+        }
+        else if (sceneName == "GameOverScene")
+        {
+            PlayMusic(gameOverMusic);
         }
     }
 
-    // Plays one randomly selected clip from an array.
+    public void PlayMusic(AudioClip clip)
+    {
+        if (clip == null || musicSource == null)
+            return;
+
+        // Don't restart music if the correct song is already playing.
+        if (musicSource.clip == clip && musicSource.isPlaying)
+            return;
+
+        musicSource.Stop();
+        musicSource.clip = clip;
+        musicSource.volume = musicVolume;
+        musicSource.loop = true;
+        musicSource.Play();
+    }
+
+    public void StopMusic()
+    {
+        if (musicSource != null)
+        {
+            musicSource.Stop();
+        }
+    }
+
     public void PlayRandomSFX(AudioClip[] clips, float volume = 1f)
     {
         if (clips == null || clips.Length == 0)
-        {
             return;
-        }
 
         int randomIndex = Random.Range(0, clips.Length);
         PlaySFX(clips[randomIndex], volume);
     }
 
-    // Plays an individual sound effect.
     public void PlaySFX(AudioClip clip, float volume = 1f)
     {
         if (clip == null || sfxSource == null)
-        {
             return;
-        }
 
         sfxSource.PlayOneShot(clip, volume * sfxVolume);
     }
 
-    // Rabbit sound methods.
     public void PlayRabbitFootstep()
     {
         PlayRandomSFX(rabbitFootsteps);
@@ -112,34 +171,11 @@ public class SoundManager : MonoBehaviour
 
     public void PlayClothImpact()
     {
-        // Randomize the impact sample.
         PlayRandomSFX(clothImpacts, 0.8f);
     }
 
     public void PlayRabbitDeath()
     {
         PlaySFX(rabbitDeath);
-    }
-
-    public void PlayMusic(AudioClip clip)
-    {
-        if (clip == null || musicSource == null)
-        {
-            return;
-        }
-
-        musicSource.Stop();
-        musicSource.clip = clip;
-        musicSource.volume = musicVolume;
-        musicSource.loop = true;
-        musicSource.Play();
-    }
-
-    public void StopMusic()
-    {
-        if (musicSource != null)
-        {
-            musicSource.Stop();
-        }
     }
 }

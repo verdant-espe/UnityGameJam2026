@@ -360,6 +360,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1413107614144720215}
     - target: {fileID: 7148062810107546717, guid: 3bda8bae661100d43a50200b8ff0d78a, type: 3}
+      propertyPath: cards.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7148062810107546717, guid: 3bda8bae661100d43a50200b8ff0d78a, type: 3}
       propertyPath: 'cards.Array.data[0]'
       value: 
       objectReference: {fileID: 7075847681154940218}

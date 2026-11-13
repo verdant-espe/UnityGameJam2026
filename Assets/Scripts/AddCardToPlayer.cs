@@ -111,6 +111,15 @@ public class AddCardToPlayer : MonoBehaviour
         if (opener != null)
         {
             opener.CloseRoulette();
+        // If card enters trigger of the pointer and roulette is stopped, that card is selected and added to the card slot
+        for(int i = 0; i < cards.Length; i++)
+        {
+            if (pointer == other.gameObject.CompareTag("Card") && rouletteSpin == false)
+            {
+                Debug.Log("A card has been selected!");
+
+                currentCard = cards[i];
+            }
         }
     }
 

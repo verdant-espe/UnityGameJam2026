@@ -1,103 +1,208 @@
+
 using UnityEngine;
-using System.Reflection;
 
 public class CardSystem : MonoBehaviour
 {
-    // References card game objects
-    public GameObject card;
-
-    // References player
+    [Header("Player References")]
     public PlayerMovement player;
-
-    // References player projectiles
-    private PlayerProjectile projectile;
-
-    // References player knockback
-    public KnockbackReceiver kbReceiver;
-
-    // References player shooting
     public PlayerShooting shooting;
-
     public PlayerHealth playerHealth;
 
-    // References enemy
-    public EnemyChase enemy;
-
-    // References enemy health
-    public EnemyHealth enemyHealth;
-
-    // Checks if player has collected a card
     public bool hasCard;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    [Header("Active Tarot Card")]
+    [SerializeField] private float cardDuration = 30f;
+    [SerializeField] private float timeRemaining;
 
+    private GameObject activeCard;
+    private EnemyChase affectedEnemy;
+    private float originalEnemySpeed;
+
+    private float normalSpeed;
+    private float normalSprintSpeed;
+    private float normalAirControl;
+    private int normalMaxJumps;
+
+    private float normalFireRate;
+    private int normalProjectileDamage;
+    private float normalProjectileKnockback;
+
+    private int normalDamageMultiplier;
+
+    private void Start()
+    {
+        // Remember the rabbit's original settings.
+        normalSpeed = player.speed;
+        normalSprintSpeed = player.sprintSpeed;
+        normalAirControl = player.airControl;
+        normalMaxJumps = player.maxJumps;
+
+        normalFireRate = shooting.fireRate;
+        normalProjectileDamage = shooting.projectileDamage;
+        normalProjectileKnockback = shooting.projectileKnockback;
+
+        normalDamageMultiplier = playerHealth.damageTakenMultiplier;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    private void RestoreEnemySpeed()
     {
-        
+        if (affectedEnemy != null)
+        {
+            // Return the monster to its original speed.
+            affectedEnemy.speed = originalEnemySpeed;
+
+            // Clear the reference.
+            affectedEnemy = null;
+        }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void RestorePlayerStats()
     {
-        // Upon entering trigger on card platform, player now has a card
-        if(other.CompareTag("Card"))
+        // Restore normal movement.
+        player.speed = normalSpeed;
+        player.sprintSpeed = normalSprintSpeed;
+        player.airControl = normalAirControl;
+        player.maxJumps = normalMaxJumps;
+
+        // Restore normal shooting.
+        shooting.fireRate = normalFireRate;
+        shooting.projectileDamage = normalProjectileDamage;
+        shooting.projectileKnockback = normalProjectileKnockback;
+
+        // Restore normal damage taken.
+        playerHealth.damageTakenMultiplier = normalDamageMultiplier;
+
+        Debug.Log("Tarot player stats restored!");
+    }
+
+    private void Update()
+    {
+        // Only count down if a tarot card is active.
+        if (activeCard == null)
+            return;
+
+        timeRemaining -= Time.deltaTime;
+
+        // When the timer reaches zero, remove the card.
+        if (timeRemaining <= 0f)
         {
-            hasCard = true; 
+            RestorePlayerStats();
+            RestoreEnemySpeed();
+
+            activeCard = null;
+            hasCard = false;
+            timeRemaining = 0f;
+
+            Debug.Log("TAROT CARD EXPIRED!");
+        }
+    }
+
+    // Called when the roulette selects a card.
+    public void ApplyCard(GameObject selectedCard)
+    {
+        if (selectedCard == null)
+        {
+            Debug.LogWarning("No tarot card selected!");
+            return;
         }
 
-        // If player gets Card1, player gains a third jump but enemy gets faster
-        if(other.gameObject.name == "Card1")
+        if (player == null || shooting == null || playerHealth == null)
         {
-            player.maxJumps = 3;
-
-            enemy.speed = 6f;
+            Debug.LogWarning("CardSystem player references are missing!");
+            return;
         }
 
-        // If player gets Card2, projectile damage is doubled but damage received is doubled as well
-        if (other.gameObject.name == "Card2")
+        // Remove the previous card's player effects.
+        if (activeCard != null)
         {
-            enemyHealth.TakeDamage(2);
+            RestorePlayerStats();
 
-            playerHealth.TakeDamage(2);
-        }
-
-        // If player gets Card3, projectile fire rate is increased but speed is decreased
-        if (other.gameObject.name == "Card3")
-        {
-            shooting.fireRate = 4.0f;
-
-            player.speed = 3f;
-        }
-
-        // If player gets Card4, projectile gets increased knockback but a reduced fire rate
-        if(other.gameObject.name == "Card4")
-        {
-            projectile.knockbackStrength = 12f;
-
-            shooting.fireRate = 1.0f;
-        }
-
-        // If player gets Card5, health is regenerated but enemy moves faster
-        if (other.gameObject.name == "Card5")
-        {
-            if(playerHealth.CurrentHealth < playerHealth.MaxHealth)
+            // Remove all effects from the previous card.
+            if (activeCard != null)
             {
-                playerHealth.CurrentHealth = 7;
+                RestorePlayerStats();
+                RestoreEnemySpeed();
             }
 
-            enemy.speed = 6f;
+            // Activate the new card and restart its timer.
+            activeCard = selectedCard;
+            timeRemaining = cardDuration;
+
         }
 
-        // If player gets Card6, speed is increased but air control is reduced
-        if (other.gameObject.name == "Card6")
-        {
-            player.speed = 8f;
+        // Activate the new card and restart its timer.
+        activeCard = selectedCard;
+        timeRemaining = cardDuration;
 
-            player.gravity = 10f;
+        switch (selectedCard.name)
+        {
+            case "Card1": // Triple Jump
+                player.maxJumps = 3;
+                IncreaseEnemySpeed();
+                break;
+
+            case "Card2": // Glass Cannon
+                shooting.projectileDamage = 2;
+                playerHealth.damageTakenMultiplier = 2;
+                break;
+
+            case "Card3": // Rapid Fire
+                shooting.fireRate = 0.1f;
+                player.speed = 3f;
+                break;
+
+            case "Card4": // Heavy Hitter
+                shooting.projectileKnockback = 12f;
+                shooting.fireRate = 0.4f;
+                break;
+
+            case "Card5": // Regeneration
+                playerHealth.Heal(playerHealth.MaxHealth);
+                IncreaseEnemySpeed();
+                break;
+
+            case "Card6": // The Chariot
+                player.speed = 8f;
+                player.sprintSpeed = 11f;
+                player.airControl = 0.35f;
+                break;
+
+            default:
+                Debug.LogWarning("Unknown tarot card: " + selectedCard.name);
+                return;
+        }
+
+        hasCard = true;
+
+        Debug.Log("TAROT EFFECT APPLIED: " + selectedCard.name);
+    }
+
+
+    private void IncreaseEnemySpeed()
+    {
+        EnemyChase[] enemies =
+            FindObjectsByType<EnemyChase>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (EnemyChase enemy in enemies)
+        {
+            // Only affect the currently active monster.
+            if (enemy == null || !enemy.isActiveAndEnabled)
+                continue;
+
+            // Remember the monster and its original speed.
+            affectedEnemy = enemy;
+            originalEnemySpeed = enemy.speed;
+
+            // Apply the unlucky effect.
+            enemy.speed = 6f;
+
+            Debug.Log("Enemy speed increased to 6!");
+
+            break;
         }
     }
+
 }

@@ -10,6 +10,12 @@ public class PlayerShooting : MonoBehaviour
     [Header("Shooting Settings")]
     [SerializeField] public float fireRate = 0.2f;
 
+    
+[Header("Projectile Upgrades")]
+public int projectileDamage = 1;
+public float projectileKnockback = 8f;
+
+
     private float nextFireTime;
 
     private void Update()
@@ -46,7 +52,13 @@ public class PlayerShooting : MonoBehaviour
         if (projectileScript != null)
         {
             projectileScript.Initialize(shootDirection);
+
+            projectileScript.ConfigureCombat(
+                projectileDamage,
+                projectileKnockback
+            );
         }
+
         // Play a randomized gunshot when a projectile is fired.
         if (SoundManager.Instance != null)
         {

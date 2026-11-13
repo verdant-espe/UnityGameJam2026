@@ -26,6 +26,13 @@ public class PlayerProjectile : MonoBehaviour
         direction = shootDirection.normalized;
     }
 
+    public void ConfigureCombat(int newDamage, float newKnockback)
+    {
+        damage = Mathf.Max(1, newDamage);
+        knockbackStrength = Mathf.Max(0f, newKnockback);
+    }
+
+
     private void Start()
     {
         Destroy(gameObject, lifetime);

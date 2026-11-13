@@ -13,8 +13,18 @@ public class TarotPlatform : MonoBehaviour
 
         hasActivated = true;
 
-        Debug.Log(
-            "TAROT PLATFORM ACTIVATED! Open Shelby's roulette Canvas!"
-        );
+
+        TarotRouletteOpener rouletteOpener =
+            FindFirstObjectByType<TarotRouletteOpener>();
+
+        if (rouletteOpener != null)
+        {
+            rouletteOpener.ShowRoulette();
+        }
+        else
+        {
+            Debug.LogWarning("Tarot Roulette Opener not found!");
+        }
+
     }
 }

@@ -12,6 +12,11 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHeight = 2f;
     public float gravity = -20f;
 
+    [Header("Air Control")]
+    [Range(0f, 1f)]
+    public float airControl = 1f;
+
+
     [Header("Double Jump")]
     public int maxJumps = 2;
     private int jumpsRemaining;
@@ -40,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     private float jumpSquatTimer;
 
     private float horizontalKnockbackVelocity;
+    private float airHorizontalVelocity;
     private float hitStunTimer;
 
     // Prevent jump counts resetting during takeoff.
@@ -141,8 +147,29 @@ public class PlayerMovement : MonoBehaviour
         // Apply gravity.
         velocity.y += gravity * Time.deltaTime;
 
+
         // Normal horizontal movement.
-        float horizontalMovement = x * currentSpeed;
+        float targetMovement = x * currentSpeed;
+        float horizontalMovement;
+
+        if (isGrounded || airControl >= 1f)
+        {
+            // Normal movement responds immediately.
+            horizontalMovement = targetMovement;
+            airHorizontalVelocity = horizontalMovement;
+        }
+        else
+        {
+            // Reduced air control makes direction changes slower.
+            airHorizontalVelocity = Mathf.MoveTowards(
+                airHorizontalVelocity,
+                targetMovement,
+                40f * airControl * deltaTime
+            );
+
+            horizontalMovement = airHorizontalVelocity;
+        }
+
 
         // Disable player input during hit stun.
         if (isHitStunned)

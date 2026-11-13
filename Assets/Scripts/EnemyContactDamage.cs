@@ -28,6 +28,12 @@ public class EnemyContactDamage : MonoBehaviour
 
     private void Update()
     {
+
+        if (Time.timeScale == 0f)
+        {
+            return;
+        }
+
         if (Time.time < nextAllowedHitTime)
             return;
 

@@ -11,35 +11,27 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 0f;
-
-        pauseButton.SetActive(false);
-        restartPanel.SetActive(false);
+        // Make sure gameplay isn't left paused.
+        Time.timeScale = 1f;
     }
 
     public void PlayGame()
     {
-        mainMenuCanvas.SetActive(false);
-        pauseButton.SetActive(true);
-
+        // Resume normal game time.
         Time.timeScale = 1f;
+
+        // Load the gameplay scene.
+        SceneManager.LoadScene("GameScene");
     }
 
- 
     public void QuitGame()
     {
-        Time.timeScale = 0f;
+        // Resume normal time before loading.
+        Time.timeScale = 1f;
 
-        restartPanel.SetActive(false);
-        creditsPanel.SetActive(false);
-        pauseButton.SetActive(false);
-
-        mainMenuCanvas.SetActive(true);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        // Return to the title screen.
+        SceneManager.LoadScene("TitleScene");
     }
-
 
     public void OpenCredits()
     {
@@ -70,10 +62,10 @@ public class MainMenuManager : MonoBehaviour
 
     public void RestartGame()
     {
+        // Resume normal time.
         Time.timeScale = 1f;
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+        // Start a new game.
+        SceneManager.LoadScene("GameScene");
     }
 }

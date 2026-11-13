@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/JeffreyBrown_01.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/TitleScene.unity
+    guid: 58fbb8d97c04d624481828551cb226e5
+  - enabled: 1
+    path: Assets/Scenes/GameScene.unity
+    guid: c16db4e1e42b9a644a2ee0f6fae00fb3
+  - enabled: 1
+    path: Assets/Scenes/GameOverScene.unity
+    guid: 211b3c4cd26de8c4ca367f787a0fce19
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -68,4 +68,20 @@ public class MainMenuManager : MonoBehaviour
         // Start a new game.
         SceneManager.LoadScene("GameScene");
     }
+
+
+    public void ExitApplication()
+    {
+        Debug.Log("Exiting application...");
+
+        // Close the game in a standalone build.
+        Application.Quit();
+
+#if UNITY_EDITOR
+        // Stop Play Mode when testing in the Unity Editor.
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+
 }
